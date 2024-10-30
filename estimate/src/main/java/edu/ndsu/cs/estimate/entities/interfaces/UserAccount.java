@@ -22,6 +22,7 @@ public interface UserAccount {
 	public Integer	getUserID(); 
 	
 	public String	getPasswordHash();
+	public void		setPasswordHash(String passwordHash);
 	
 	public String	getPasswordSalt();
 	public void		setPasswordSalt(String passwordSalt);
@@ -71,6 +72,8 @@ public interface UserAccount {
 			return false; 
 		}
 		
+		validatePassword(newPassword);
+		
 		SimpleByteSource salt = new SimpleByteSource(getPasswordSalt());
 		String hash = new Sha512Hash(oldPassword, salt).toHex(); 
 		
@@ -100,10 +103,11 @@ public interface UserAccount {
 		else if(getUserName().length() > 50) {
 			errors.add("Name cannot be greater than 50 characters."); 
 		}
+		
 		return errors; 
 	}
 	
-	/* Static method to determine if a password is valid. The rules hare ensure that
+	/* Default method to determine if a password is valid. The rules hare ensure that
 	 *  a password is between 10 and 60 characters and has at least one of each of an
 	 *  uppercase letter, lowercase letter, numeric digit, and special character. 
 	 * It may be reasonable to modify this method to also accept the UserAccount as
@@ -113,9 +117,18 @@ public interface UserAccount {
 	 * This method could also compare the password against a list of commonly used
 	 *  insecure passwords in order to exclude it for those reasons as well. 
 	 */
-	public static List<String> validatePassword(String password) {
+	public default List<String> validatePassword(String password) {
 		ArrayList<String> errors = new ArrayList<String>();
-		if(password.length() < 10) {
+		/* First check if password is null, as the length() method can't
+		*  be called if no input is given. If password is null, it is required
+		*  to return otherwise the program will crash as it attempts to call
+		*  string methods on the null password.
+		*/
+		if(password == null) {
+			errors.add("Password cannot be empty");
+			return errors;
+		}
+		else if(password.length() < 10) {
 			errors.add("Password must contain at least 10 characters.");
 		}
 		else if(password.length() > 60) {

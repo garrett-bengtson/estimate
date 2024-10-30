@@ -59,12 +59,13 @@ public class MyAccount {
     }
 
     void onValidateFromPasswordForm() {
+    	System.out.println("method called");
         if (!newPassword.equals(confirmNewPassword)) {
             passwordForm.recordError("New password and confirm password do not match.");
             return;
         }
 
-        boolean passwordChanged = userAccount.changePassword(oldPassword, newPassword, userAccount.getUserID().toString());
+        boolean passwordChanged = userAccount.changePassword(oldPassword, newPassword, confirmNewPassword);
         if (!passwordChanged) {
             passwordForm.recordError("Incorrect old password.");
         }
