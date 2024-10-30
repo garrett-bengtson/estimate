@@ -125,7 +125,7 @@ public interface UserAccount {
 		*  string methods on the null password.
 		*/
 		if(password == null) {
-			errors.add("Password cannot be empty");
+			errors.add("Password cannot be empty.");
 			return errors;
 		}
 		else if(password.length() < 10) {
