@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+    </meta>
+</head>
+<body>
+    <t:beanDisplay t:id="userAccount" t:source="userAccount" t:model="userAccountBeanModel" />
+    
+    <t:form t:id="passwordForm">
+        <t:passwordField t:id="oldPassword" label="Old Password" />
+        <t:passwordField t:id="newPassword" label="New Password" />
+        <t:passwordField t:id="confirmNewPassword" label="Confirm New Password" />
+        <t:submit value="Change Password" />
+    </t:form>
+</body>
+</html>
