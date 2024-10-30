@@ -2,13 +2,17 @@ package edu.ndsu.cs.estimate.pages;
 
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.SimpleByteSource;
 import org.apache.tapestry5.alerts.AlertManager;
 import org.apache.tapestry5.alerts.Duration;
 import org.apache.tapestry5.alerts.Severity;
@@ -66,6 +70,10 @@ public class CreateAccount
 	@InjectComponent
 	private Form createAccountForm;
 	
+	//Property for password errors
+	@Property
+	private List<String> passwordErrors = new ArrayList<>();
+	
 
     void setupRender() {
 	   if (userAccount == null || userAccount.getPK() == null || userAccount.getPK() == -1) {
@@ -73,22 +81,45 @@ public class CreateAccount
 	    }
     }
 	
+    // Set password method that collects errors created from validation of password
+    // The salt and hash are created here for security.
+    void setPassword() {
+    	passwordErrors = userAccount.validatePassword(passWord);
+    	if(passwordErrors.isEmpty()) {
+			//Create a salt and hash for the userAccount
+			String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+			userAccount.setPasswordSalt(salt);
+			
+			String hash = new Sha512Hash(passWord, salt).toHex(); 
+			userAccount.setPasswordHash(hash);
+			
+			//Clear the plaintext password for security
+			passWord = null;
+		}
+    }
+    
     void onValidateFromCreateAccountForm()
     {
 		
     	userAccount.setUserName(userName);
-		userAccount.setPasswordSalt(new SecureRandomNumberGenerator().nextBytes().toHex());
-		userAccount.setPassword(passWord);
-			List<String> errors = userAccount.validate();
-			for(String error : errors)
-			{
-				createAccountForm.recordError(error);
-			}	
-			if(!createAccountForm.getHasErrors())
-			{
-				
-				userAccountDatabaseService.updateUserAccount(userAccount);
-			}
+    	//Call the setPassword method.
+		setPassword();
+		List<String> errors = userAccount.validate();
+		
+		//Record errors detected in every user account field besides password.
+		for(String error : errors)
+		{
+			createAccountForm.recordError(error);
+		}
+		//Record errors detected in the created password.
+		for(String error : passwordErrors) {
+			createAccountForm.recordError(error);
+		}
+		//Update the user account if there are no errors.
+		if(!createAccountForm.getHasErrors())
+		{
+			userAccountDatabaseService.updateUserAccount(userAccount);
+		}
 		
 	}
 
@@ -106,8 +137,16 @@ public class CreateAccount
         if (currentUser == null) {
             throw new IllegalStateException("Subject can't be null");
         }
+        
+     // Retrieve the salt for the user and hash the password with it
+        UserAccount account = userAccountDatabaseService.getUserAccount(username);
+        if (account == null) {
+            alertManager.alert(Duration.SINGLE, Severity.ERROR, "User account not found.");
+            return null;
+        }
 
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        String saltedHash = new Sha512Hash(password, new SimpleByteSource(account.getPasswordSalt())).toHex();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, saltedHash);
         token.setRememberMe(rememberMe);
 
         try {
@@ -115,7 +154,8 @@ public class CreateAccount
             alertManager.alert(Duration.SINGLE, Severity.SUCCESS, "Account created and logged in successfully.");
             return Index.class;
         } catch (AuthenticationException e) {
-            alertManager.alert(Duration.SINGLE, Severity.ERROR, "Automatic login failed. Please try to log in manually.");
+            alertManager.alert(Duration.SINGLE, Severity.ERROR, "Automatic login failed. Please try to log in manually. Hash: "
+            		+ userAccount.getPasswordHash() + ", Salt: " + userAccount.getPasswordSalt());
             return null;
         }
     }
