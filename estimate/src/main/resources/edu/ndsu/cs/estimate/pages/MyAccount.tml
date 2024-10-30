@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+<html t:type="layout" title="MyAccount | EstiMate" lang="en" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
 <head>
     <meta charset="UTF-8">
     <title>My Account</title>
@@ -9,8 +8,11 @@
     <t:beanDisplay t:id="userAccount" t:source="userAccount" t:model="userAccountBeanModel" />
     
     <t:form t:id="passwordForm">
+    	<t:label for="oldPassword">Old Password</t:label>
         <t:passwordField t:id="oldPassword" label="Old Password" />
+        <t:label for="newPassword">New Password</t:label>
         <t:passwordField t:id="newPassword" label="New Password" />
+        <t:label for="confirmNewPassword">Confirm New Password</t:label>
         <t:passwordField t:id="confirmNewPassword" label="Confirm New Password" />
         <t:submit value="Change Password" />
     </t:form>
