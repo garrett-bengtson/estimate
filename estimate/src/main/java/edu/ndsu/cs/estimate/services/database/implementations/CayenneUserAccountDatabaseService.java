@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.cayenne.Cayenne;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ObjectSelect;
+import org.apache.cayenne.query.SelectQuery;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.tapestry5.OptionGroupModel;
 import org.apache.tapestry5.OptionModel;
@@ -164,6 +165,19 @@ public class CayenneUserAccountDatabaseService implements UserAccountDatabaseSer
 	
 	public ValueEncoder<RoleInterface> getRoleValueEncoder(UserAccount userAccount) {
 		return new RoleValueEncoder(userAccount);
+	}
+	
+	//Method to query database and check if an inputted username is taken
+	@Override
+	public boolean isUsernameTaken(String username) {
+		//getUserAccount returns null if no userAccount is found,
+		//so return false if no account is found.
+		if(getUserAccount(username) == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	/* This class is responsible for populating the drop-down list with choices. It's
