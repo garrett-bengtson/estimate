@@ -69,7 +69,19 @@ public class MyAccount {
     void onValidateFromPasswordForm() {
     	//debug statement
     	//System.out.println("method called");
-        if (!newPassword.equals(confirmNewPassword)) {
+    	//Return if there is no input for the old password.
+    	if(oldPassword == null) {
+    		passwordForm.recordError("Please enter your old password.");
+    		return;
+    	}
+    	
+    	//Return if no password is inputted.
+    	if(newPassword == null) {
+    		passwordForm.recordError("Your new password can't be empty.");
+    		return;
+    	}
+    	//Return if the new password and confirmation don't match.
+    	else if (!newPassword.equals(confirmNewPassword)) {
             passwordForm.recordError("New password and confirm password do not match.");
             return;
         }

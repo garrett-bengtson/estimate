@@ -98,9 +98,6 @@ public class CreateAccount
 			
 			String hash = new Sha512Hash(passWord, salt).toHex(); 
 			userAccount.setPasswordHash(hash);
-//			
-//			//Clear the plaintext password for security
-//			passWord = null;
 		}
     }
     
@@ -170,8 +167,7 @@ public class CreateAccount
             return null;
         }
 
-        String saltedHash = new Sha512Hash(password, new SimpleByteSource(account.getPasswordSalt())).toHex();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, saltedHash);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(rememberMe);
 
         try {
@@ -179,8 +175,7 @@ public class CreateAccount
             alertManager.alert(Duration.SINGLE, Severity.SUCCESS, "Account created and logged in successfully.");
             return Index.class;
         } catch (AuthenticationException e) {
-            alertManager.alert(Duration.SINGLE, Severity.ERROR, "Automatic login failed. Please try to log in manually. Hash: "
-            		+ userAccount.getPasswordHash() + ", Salt: " + userAccount.getPasswordSalt());
+            alertManager.alert(Duration.SINGLE, Severity.ERROR, "Automatic login failed. Please try to log in manually.");
             return null;
         }
     }
