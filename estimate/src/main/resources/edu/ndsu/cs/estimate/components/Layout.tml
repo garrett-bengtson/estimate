@@ -24,7 +24,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 ml-spacing">
+
             <t:security.authenticated>
+              <li class="nav-item">
+                <t:pagelink class="nav-link" page="myaccount">My Account</t:pagelink>
+              </li>
               <li class="nav-item">
                 <t:pagelink class="nav-link" page="tasks">Tasks</t:pagelink>
               </li>

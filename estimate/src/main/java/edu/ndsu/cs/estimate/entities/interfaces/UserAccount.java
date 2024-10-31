@@ -178,7 +178,7 @@ public interface UserAccount {
 	
 	public default BeanModel<UserAccount> getBeanModel(BeanModelSource beanModelSource, Messages messages) {
 		BeanModel<UserAccount> beanModel = beanModelSource.createDisplayModel(UserAccount.class, messages);
-	    beanModel.include("name", "userID");
+	    beanModel.include("Username", "userID");
 		beanModel.add("formattedRoles");
 		beanModel.get("formattedRoles").label("Roles");
 		
