@@ -1,5 +1,8 @@
 package edu.ndsu.cs.estimate.pages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Persist;
@@ -48,6 +51,11 @@ public class MyAccount {
 
     @Property
     private String confirmNewPassword;
+    
+    //Property for password errors
+  	@Property
+  	private List<String> passwordErrors = new ArrayList<>();
+
 
     void setupRender() {
         String principal = securityService.getSubject().getPrincipal().toString();
@@ -59,15 +67,24 @@ public class MyAccount {
     }
 
     void onValidateFromPasswordForm() {
-    	System.out.println("method called");
+    	//debug statement
+    	//System.out.println("method called");
         if (!newPassword.equals(confirmNewPassword)) {
             passwordForm.recordError("New password and confirm password do not match.");
             return;
         }
-
-        boolean passwordChanged = userAccount.changePassword(oldPassword, newPassword, confirmNewPassword);
-        if (!passwordChanged) {
-            passwordForm.recordError("Incorrect old password.");
+        
+        passwordErrors = userAccount.validatePassword(newPassword);
+        
+        for (String error : passwordErrors) {
+            passwordForm.recordError(error);
+        }
+        
+        if (passwordErrors.isEmpty()) {
+            boolean passwordChanged = userAccount.changePassword(oldPassword, newPassword, confirmNewPassword);
+            if (!passwordChanged) {
+                passwordForm.recordError("Incorrect old password.");
+            }
         }
     }
 
