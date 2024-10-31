@@ -6,6 +6,8 @@ import org.apache.tapestry5.annotations.Property;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.query.SelectQuery;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -70,6 +72,10 @@ public class CreateAccount
 	@InjectComponent
 	private Form createAccountForm;
 	
+	//Property for username errors
+	@Property
+	private List<String> usernameExistsErrors = new ArrayList<>();
+	
 	//Property for password errors
 	@Property
 	private List<String> passwordErrors = new ArrayList<>();
@@ -92,27 +98,46 @@ public class CreateAccount
 			
 			String hash = new Sha512Hash(passWord, salt).toHex(); 
 			userAccount.setPasswordHash(hash);
-			
-			//Clear the plaintext password for security
-			passWord = null;
+//			
+//			//Clear the plaintext password for security
+//			passWord = null;
 		}
+    }
+    
+    void setUsername() {
+    	//Query the database for user entries with the same username
+    	boolean existingUsername = userAccountDatabaseService.isUsernameTaken(userName);
+    	if(!existingUsername) {
+    		//Needed to clear usernameErrors if multiple attempts fail.
+    		usernameExistsErrors.remove("Username is taken.");
+    		userAccount.setUserName(userName);
+    	}
+    	else {
+    		usernameExistsErrors.add("Username is taken.");
+    	}
     }
     
     void onValidateFromCreateAccountForm()
     {
 		
-    	userAccount.setUserName(userName);
+    	//Call the setUsername method.
+    	setUsername();
     	//Call the setPassword method.
 		setPassword();
 		List<String> errors = userAccount.validate();
+		//Add errors found for username existence. Remove the 
+		//"Name cannot be empty" error created in the validate method.
+		//(Done because the interface doesn't currently have access to
+		//the database/isExistingUsername method.)
+		if(!usernameExistsErrors.isEmpty()) {
+			errors.remove("Name cannot be empty.");
+			errors.addAll(usernameExistsErrors);
+		}
+		errors.addAll(passwordErrors);
 		
-		//Record errors detected in every user account field besides password.
+		//Record errors detected.
 		for(String error : errors)
 		{
-			createAccountForm.recordError(error);
-		}
-		//Record errors detected in the created password.
-		for(String error : passwordErrors) {
 			createAccountForm.recordError(error);
 		}
 		//Update the user account if there are no errors.

@@ -30,6 +30,8 @@ public interface UserAccountDatabaseService {
 	public SelectModel					getRoleSelectModel(UserAccount userAccount);
 	public ValueEncoder<RoleInterface>			getRoleValueEncoder(UserAccount userAccount);
 	
+	public boolean 						isUsernameTaken(String userName);
+	
 	
 
 	/* Method to perform validation on a UserAccount. It first validates any of the
@@ -64,5 +66,6 @@ public interface UserAccountDatabaseService {
 		
 		return errors; 
 	}
+	
 	
 }
