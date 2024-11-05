@@ -173,52 +173,101 @@ public class Index {
 		getTasks(); //Update displayed tasks
 	}
 	
+	//Determine if the total logged hours will be over one million
+	//if the input is added.
+	boolean isLoggedHoursSumLessThanOneMillion(Task task, int input) {
+		if(task.getTimeTaken() + input <= 1000000) {
+			return true;
+		}
+		return false;
+	}
+	
+	//Custom hour logging. Note that there is input validation in the
+	//Index.tml file to make the range be between 1,000,000 and -1,000,000.
 	void onSubmitFromAddHourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + this.hours;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		//Break out of the function if the current logged hours +
+		//the input is negative
+		if(tempTask.getTimeTaken() + this.hours < 0) {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be negative.");
+			return;
+		}
+		//Prevent extremely large inputs (total hours logged will never go over a million)
+		else if(isLoggedHoursSumLessThanOneMillion(tempTask, this.hours)){
+			System.out.println("Hours: " + this.hours);
+			int tempTime = tempTask.getTimeTaken() + this.hours;
+			tempTask.setTimeTaken(tempTime);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void onSubmitFromAdd1HourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + (int)1;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		if(isLoggedHoursSumLessThanOneMillion(tempTask, 1)) {
+			int temp = tempTask.getTimeTaken() + (int)1;
+			tempTask.setTimeTaken(temp);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void onSubmitFromAdd2HourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + (int)2;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		if(isLoggedHoursSumLessThanOneMillion(tempTask, 2)) {
+			int temp = tempTask.getTimeTaken() + (int)2;
+			tempTask.setTimeTaken(temp);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void onSubmitFromAdd3HourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + (int)3;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		if(isLoggedHoursSumLessThanOneMillion(tempTask, 3)) {
+			int temp = tempTask.getTimeTaken() + (int)3;
+			tempTask.setTimeTaken(temp);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void onSubmitFromAdd5HourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + (int)5;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		if(isLoggedHoursSumLessThanOneMillion(tempTask, 5)) {
+			int temp = tempTask.getTimeTaken() + (int)5;
+			tempTask.setTimeTaken(temp);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void onSubmitFromAdd10HourForm(int pk) {
 		Task tempTask = taskDBS.getTask(pk);
-		int temp = tempTask.getTimeTaken() + (int)10;
-		tempTask.setTimeTaken(temp);
-		taskDBS.updateTask(tempTask);
-		getTasks(); //Update displayed tasks
+		if(isLoggedHoursSumLessThanOneMillion(tempTask, 10)) {
+			int temp = tempTask.getTimeTaken() + (int)10;
+			tempTask.setTimeTaken(temp);
+			taskDBS.updateTask(tempTask);
+			getTasks(); //Update displayed tasks
+		}
+		else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
+		}
 	}
 	
 	void makeExampleTasks() {
