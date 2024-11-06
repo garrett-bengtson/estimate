@@ -35,7 +35,10 @@ public interface TaskInterface {
 	
 	public boolean 	getWillNotComplete();
 	public void 	setWillNotComplete(boolean willNotComplete);
-
+	
+	public boolean 	getCannotComplete();
+	public void 	setCannotComplete(boolean cannotComplete);
+	
     public Date      getEstEndDate();
 	public void   	 setEstEndDate(Date estEndDate); 
 

@@ -53,9 +53,10 @@ private static Random rand = new Random();
 		boolean completed = false;
 		UserAccount user = newUser;
 		boolean willNotComplete = false;
+		boolean cannotComplete = false;
 		
 		
-		return new MockTask(name, timeTaken, startDate, estEndDate, actualEndDate, dropped, completed, user, willNotComplete); 
+		return new MockTask(name, timeTaken, startDate, estEndDate, actualEndDate, dropped, completed, user, willNotComplete, cannotComplete); 
 	}
 	
 
