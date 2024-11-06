@@ -34,14 +34,14 @@ public class CayenneTaskDatabaseService implements TaskDatabaseService{
 	@Override
 	public List<? extends Task> listAllTasks(Date start, Date end, UserAccount user) {
 		return ObjectSelect.query(Task.class)
-				.where(Task.COMPLETED.eq(false).andExp(Task.DROPPED.eq(false).andExp(Task.WILL_NOT_COMPLETE.eq(false)).andExp(Task.EST_END_DATE.between(start, end).andExp(Task.USER.eq((User)user)))))
+				.where(Task.COMPLETED.eq(false).andExp(Task.DROPPED.eq(false).andExp(Task.WILL_NOT_COMPLETE.eq(false)).andExp(Task.CANNOT_COMPLETE.eq(false)).andExp(Task.EST_END_DATE.between(start, end).andExp(Task.USER.eq((User)user)))))
 				.select(cayenneService.newContext());
 	}
 
 	@Override
 	public List<? extends Task> listCompleted(User user){
 		return ObjectSelect.query(Task.class)
-				.where(Task.COMPLETED.eq(true).andExp(Task.DROPPED.eq(false)).andExp(Task.WILL_NOT_COMPLETE.eq(false)))
+				.where(Task.COMPLETED.eq(true).andExp(Task.DROPPED.eq(false)).andExp(Task.WILL_NOT_COMPLETE.eq(false)).andExp(Task.CANNOT_COMPLETE.eq(false)))
 				.select(cayenneService.newContext());
 	}
 	
