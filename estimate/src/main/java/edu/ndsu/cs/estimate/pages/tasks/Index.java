@@ -301,4 +301,11 @@ public class Index {
 			taskDBS.updateTask(tempTask);
 		return Index.class;
 	}
+	@OnEvent(component="cannotComplete")
+	Object onClickCloseCannotComplete(int pk) {
+			Task tempTask = taskDBS.getTask(pk);
+			tempTask.setCannotComplete(true);
+			taskDBS.updateTask(tempTask);
+		return Index.class;
+	}
 }

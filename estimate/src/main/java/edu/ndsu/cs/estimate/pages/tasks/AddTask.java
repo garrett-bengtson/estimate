@@ -80,6 +80,7 @@ public class AddTask {
 		task.setDropped(false);
 		task.setCompleted(false);
 		task.setWillNotComplete(false);
+		task.setCannotComplete(false);
 		String principal = securityService.getSubject().getPrincipal().toString();
 		userAccount = userAccountDatabaseService.getUserAccountFromContext(task.getObjectContext(), principal);
 		task.setUser((User) userAccount);
