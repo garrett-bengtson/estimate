@@ -59,7 +59,7 @@
 					</t:unless>
 					<div class="row justify-content-center mb-3">
 						<div class="col-md-6 col-lg-4 d-grid gap-2">
-							<t:pagelink page="hours/AddHours" class="btn btn-success">Add Hours</t:pagelink>
+							<t:pagelink page="hours/AddHours" context="task.pk" class="btn btn-success">Add Hours</t:pagelink>
 						</div>
 					</div>
                 </t:form>

@@ -1,11 +1,32 @@
-<html t:type="layout" title="ViewHours"
+<html t:type="layout" title="View Hours"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
-
-<!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="row hero-unit">
     <h1>${message:greeting}</h1>
+</div>
+
+<div class="container">
+    <h2>Log Hours for Task: ${task.getName()}</h2>
+    
+    <!-- Form for logging hours with a timestamp -->
+    <t:form t:id="logHoursForm">
+        <!-- Label and DateField for Timestamp -->
+        <t:label for="timestamp" value="Timestamp:"/>
+        <t:datefield t:id="timestamp" value="timestampStr" format="MM/dd/yyyy HH:mm"/>
+        <p>Timestamp: <t:output value="hour.timestamp" format="MM/dd/yyyy HH:mm" /></p>
+        
+
+       
+        <t:submit value="Log Hours" />
+    </t:form>
+    
+    <!-- Display existing logged hours -->
+    <h3>Logged Hours:</h3>
+    <div t:type="loop" t:source="hours" t:value="hour">
+        <p>Hours logged: ${hour.getHoursLogged()}</p>
+        <p>Timestamp: ${hour.getTimestamp()}</p>
+    </div>
 </div>
 
 </html>
