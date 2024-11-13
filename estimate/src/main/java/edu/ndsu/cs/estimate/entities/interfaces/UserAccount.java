@@ -52,6 +52,11 @@ public interface UserAccount {
 		return formattedRoles;
 	}
 	
+	
+  	public default boolean isAdmin() {
+  		return getFormattedRoles().toLowerCase().contains("admin");
+  	}
+	
 	/* Default implementation for changing a password. It assumes that the SHA-512 
 	 *  hashing algorithm is being used. It will ensure that the new password being
 	 *  supplied matches some retyped password as well, but does not enforce any 

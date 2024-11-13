@@ -15,8 +15,8 @@
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
-                        <t:label for="categorySelect" class="form-label"/>
-                        <t:select t:id="categorySelect" value="category" model="uniqueCategories" class="form-control"/>
+                        <t:label for="categoryTextField" class="form-label"/>
+                        <t:textField t:id="categoryTextField" value="category" class="form-control"/>
                     </div>
                 </div>
 

@@ -51,7 +51,7 @@ public class Index {
     
     @Property
     private List<String> categories = new ArrayList<>();
-    
+
     @Component(id = "category", parameters = {"value=category", "model=categoryModel", "blankOption=never"})
     private Select categorySelect;
 

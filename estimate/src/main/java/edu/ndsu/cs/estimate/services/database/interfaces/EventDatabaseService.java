@@ -14,4 +14,5 @@ public interface EventDatabaseService {
     Event updateEvent(int eventId, String name, String description, String category, Date eventDate);
     void deleteEvent(int eventId);
     Event updateEventResult(int eventId, Integer result);
+    List<String> findAllCategories();
 }
