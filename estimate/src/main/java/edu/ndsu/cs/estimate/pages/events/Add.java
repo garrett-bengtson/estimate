@@ -50,9 +50,15 @@ public class Add {
     	}
     	if (eventDateString == null) {
     		eventForm.recordError("Date must be included in event creation.");
-
-    	
     	}
+        Date eventDate = parseDate(eventDateString);
+    	if (eventDate ==null) {
+    		eventForm.recordError("Invalid date format for event data. Please use MM/dd/yyyy.");
+    	}
+		if (!eventForm.getHasErrors())	 {
+			Event event = eventDatabaseService.createEvent(name, description, category, eventDate);
+			event.setEventDate(eventDate);
+		}
 			
     }
 
