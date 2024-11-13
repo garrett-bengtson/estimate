@@ -40,16 +40,14 @@
                 </div>
 
                 <div class="row justify-content-center mb-5">
-    <div class="col-md-6 col-lg-4 mb-3 d-grid gap-2">
-        <input type="submit" class="btn btn-primary" value="Update Event"/>
-        <t:if test="isAdmin">
-            <t:pagelink page="events/SetResult" context="eventId" class="btn btn-info">Set Result</t:pagelink>
-        </t:if>   
-        <t:pagelink page="events" class="btn btn-secondary">Go back</t:pagelink>
-    	</div>
-	</div>
- <div>
-        </div>
+				    <div class="col-md-6 col-lg-4 mb-3 d-grid gap-2">
+				        <input type="submit" class="btn btn-primary" value="Update Event"/>
+				        <t:if test="isAdmin">
+				            <t:pagelink page="events/SetResult" context="eventId" class="btn btn-info">Set Result</t:pagelink>
+				        </t:if>   
+				        <t:pagelink page="events" class="btn btn-secondary">Go back</t:pagelink>
+			    	</div>
+				</div>
             </t:form>
         </div>
         <script src="/js/dateInputEdit.js"></script>
