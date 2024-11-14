@@ -52,13 +52,22 @@
                     Close Task
                  </button>
                  <ul class="dropdown-menu">
-                    <li><t:actionlink t:id="complete" context="task.PK">End Task as Completed</t:actionlink></li>
-                    <li><t:actionlink t:id="drop" context="task.PK">End Task as Dropped</t:actionlink></li>
-                    <li><t:actionlink t:id="willNotComplete" context="task.PK">End Task as Will Not Complete</t:actionlink></li>
-                 </ul>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
+                  <li>
+                    <t:actionlink t:id="complete"  aria-expanded="false" context="task.PK">End Task as Completed</t:actionlink>
+                  </li>
+                  <li>
+                    <t:actionlink t:id="drop"  aria-expanded="false" context="task.PK">End Task as Dropped</t:actionlink>
+                  </li>
+                  <li>
+                    <t:actionlink t:id="willNotComplete"  aria-expanded="false" context="task.PK">End Task as Will Not Complete</t:actionlink>
+                  </li>
+                  <li>
+                    <t:actionlink t:id="cannotComplete"  aria-expanded="false" context="task.PK">End Task as Cannot Complete</t:actionlink>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
 </html>

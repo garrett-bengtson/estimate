@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Wed Nov 13 19:27:32 CST 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0193-2848-5fd7-00000ac77250 
-on database directory memory:C:\Users\Padilla\Desktop\CSCI413\estimate\estimate\testdb with class loader WebAppClassLoader{Tapestry 5 Quickstart Project}@203c5f7e 
+Wed Nov 13 19:35:21 CST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0193-284f-89a8-0000038e1250 
+on database directory memory:C:\Users\Padilla\Desktop\CSCI413\estimate\estimate\testdb with class loader WebAppClassLoader{Tapestry 5 Quickstart Project}@6a4a2090 
 Loaded from file:/C:/Users/Padilla/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Azul Systems, Inc.
 java.runtime.version=17.0.6+10-LTS
