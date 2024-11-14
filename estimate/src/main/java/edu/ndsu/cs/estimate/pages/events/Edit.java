@@ -1,7 +1,26 @@
 package edu.ndsu.cs.estimate.pages.events;
 
+import edu.ndsu.cs.estimate.cayenne.persistent.Event;
+import edu.ndsu.cs.estimate.entities.interfaces.UserAccount;
+import edu.ndsu.cs.estimate.services.database.interfaces.EventDatabaseService;
+import edu.ndsu.cs.estimate.services.database.interfaces.UserAccountDatabaseService;
+
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.tynamo.security.services.SecurityService;
+import org.apache.tapestry5.EventContext;
+import org.apache.tapestry5.annotations.PageLoaded;
+import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.corelib.components.Select;
+import org.apache.tapestry5.corelib.components.TextField;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.PageActivationContext;
@@ -19,16 +38,23 @@ public class Edit {
 
     @Inject
     private EventDatabaseService eventDatabaseService;
+    
+    @Inject
+    private UserAccountDatabaseService userAccountDatabaseService;
+    
+    @Property
+    @Persist
+    private UserAccount userAccount;
 
     @Property
     private Event event;
+    
+    @Component
+    private Form eventForm;
 
     @Property
     @PageActivationContext
     private int eventId;
-
-    @Component
-    private Form eventForm;
 
     @Property
     private String name;
@@ -44,6 +70,29 @@ public class Edit {
 
     @Property
     private String eventDateString;
+    
+    @Property
+    private List<String> uniqueCategories;
+    
+    @Component(parameters = {"value=category", "model=uniqueCategories"})
+    private Select categorySelect;
+    
+    @Property
+    private boolean isAdmin;
+
+    @Inject
+    private SecurityService securityService;
+
+    void setupRender() {
+        // Check if the current user has the "admin" role
+        isAdmin = securityService.hasRole("admin");
+        
+        String principal = securityService.getSubject().getPrincipal().toString();
+        userAccount = userAccountDatabaseService.getUserAccount(principal);
+
+        uniqueCategories = eventDatabaseService.findAllCategories();
+    }
+
 
     void onActivate(int eventId) {
         this.eventId = eventId;
@@ -54,10 +103,6 @@ public class Edit {
     }
 
     void onValidateFromEventForm() {
-    	boolean nameChanged = true;
-    	boolean descriptionChanged = true;
-    	boolean categoryChanged = true;
-    	
     	if (eventDateString == null) {
     		eventForm.recordError("Date must be included in event creation.");
     	}
@@ -78,12 +123,11 @@ public class Edit {
     	    	if (category == null || category.length() == 0) {
     	    		category = event.getCategory();
     	    	}
-//    			Event tempEvent = eventDatabaseService.createEvent(name, description, category, eventDate);
-//    			tempEvent.setEventDate(eventDate);
                 eventDatabaseService.updateEvent(eventId, name, description, category, eventDate);
 
     		}
     	}
+
     }
 
     Object onSuccessFromEventForm() {

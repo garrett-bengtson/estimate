@@ -92,9 +92,6 @@ public class EditHours {
         if (!editHoursForm.getHasErrors()) {
             hoursDatabase.updateHours(hour);
         }
-    
-    
-   
     }
 
     Object onSuccessFromEditHoursForm() {

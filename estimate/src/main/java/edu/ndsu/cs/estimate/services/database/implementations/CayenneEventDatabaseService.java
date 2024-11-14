@@ -24,6 +24,13 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     }
 
     @Override
+    public List<String> findAllCategories() {
+    	ObjectContext context = cayenneService.newContext();
+    	ColumnSelect<String> query = ObjectSelect.columnQuery(Event.class, Event.CATEGORY).distinct();
+    	return query.select(context);
+    	}
+    
+    @Override
     public List<Event> findAllEvents() {
         ObjectContext context = cayenneService.newContext();
         return ObjectSelect.query(Event.class).select(context);

@@ -56,7 +56,7 @@ public class MyAccount {
   	@Property
   	private List<String> passwordErrors = new ArrayList<>();
 
-
+  	
     void setupRender() {
         String principal = securityService.getSubject().getPrincipal().toString();
         userAccount = userAccountDatabaseService.getUserAccount(principal);

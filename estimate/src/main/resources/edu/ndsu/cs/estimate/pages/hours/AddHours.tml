@@ -22,7 +22,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
                         <!-- Hours Logged Field -->
-                        <t:label for="hoursLogged" class="form-label">Hours Logged *</t:label>
+                        <t:label for="hoursLogged" class="form-label">Hours Logged * (This task currently has ${task.getTimeTaken()} hours logged.)</t:label>
                         <t:textfield t:id="hoursLogged" value="hour.hoursLogged" class="form-control" type="number" min="-1000000" max="1000000" />
                     </div>
                 </div>
