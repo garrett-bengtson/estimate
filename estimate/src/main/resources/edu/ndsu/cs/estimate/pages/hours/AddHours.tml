@@ -10,11 +10,11 @@
                     <div class="col-md-6 col-lg-4 mb-3">
                         <!-- TimeStamp Field -->
                         <t:label for="timeStamp" class="form-label">Timestamp *</t:label>
-                        <div class="input-group">
-                            <span class="input-group-text" title="Timestamp">
+                        <div class="input-group datetimepicker-group" id="timestampDatePicker">
+                            <span class="input-group-text" data-td-target="#timestampDatePicker" data-td-toggle="datetimepicker">
                                 <i class="fa fa-calendar"></i>
                             </span>
-                            <t:dateField t:id="timeStamp" value="timeStampDate" class="form-control" placeholder="MM/DD/YYYY" validate="required" />
+                            <input t:id="timeStamp" type="text" class="form-control datetimepicker-input" readonly="readonly" />
                         </div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                     <div class="col-md-6 col-lg-4 mb-3">
                         <!-- Hours Logged Field -->
                         <t:label for="hoursLogged" class="form-label">Hours Logged *</t:label>
-                        <t:textField t:id="hoursLogged" value="hour.hoursLogged" validate="required" class="form-control" />
+                        <t:textfield t:id="hoursLogged" value="hour.hoursLogged" class="form-control" type="number" min="-1000000" max="1000000" />
                     </div>
                 </div>
 
@@ -35,6 +35,7 @@
                 </div>
             </t:form>
         </div>
+        <script src="/js/dateInput.js"></script>
     </t:security.authenticated>
 
     <t:security.notauthenticated>

@@ -8,10 +8,12 @@ import java.util.List;
 import org.apache.tapestry5.alerts.AlertManager;
 import org.apache.tapestry5.alerts.Duration;
 import org.apache.tapestry5.alerts.Severity;
+import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.Hours;
@@ -47,7 +49,10 @@ public class AddHours {
     
     @Property
     @Persist
-    private Date timestampDate;
+    private String timestampStr;
+    
+    @Component(id = "timeStamp", parameters = {"value=timestampStr", "type=text"})
+    private TextField timeStampField;
     
     @Property
     @Persist
@@ -70,14 +75,25 @@ public class AddHours {
     }
     
     void onValidateFromHoursForm() {
-        Date timestamp = timestampDate;
-        if (timestamp == null) {
-            hoursForm.recordError("Invalid date format. Please use MM/dd/yyyy HH:mm.");
-        } else {
-        	task = taskDatabase.getTask(taskPK);
-        	task.setTimeTaken(task.getTimeTaken() + hour.getHoursLogged());
-        	taskDatabase.updateTask(task); // Update task in database
-            hour.setTimestamp(timestamp);  // Set the parsed timeStamp on the `hour` object
+        if (timestampStr == null) {
+            hoursForm.recordError("Invalid date format. Please use MM/dd/yyyy.");
+        }
+        else {
+        	Date timestampDate = parseDate(timestampStr);
+    		task = taskDatabase.getTask(taskPK);
+    		if(task.getTimeTaken() + hour.getHoursLogged() > 1000000) {
+      			hoursForm.recordError("Total hours logged would be over one million.");
+      			return;
+      		}
+    		else if(task.getTimeTaken() + hour.getHoursLogged() < 0) {
+    			hoursForm.recordError("Total hours logged would be negative.");
+    			return;
+    		}
+    		else {
+    			task.setTimeTaken(task.getTimeTaken() + hour.getHoursLogged());
+    			taskDatabase.updateTask(task); // Update task in database
+                hour.setTimestamp(timestampDate);  // Set the parsed timeStamp on the `hour` object
+    		}
         }
         
         List<String> errors = hour.validate();
@@ -85,14 +101,14 @@ public class AddHours {
             hoursForm.recordError(error);
         }
         
-       
     }
-    
+     
     private Date parseDate(String timestampStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.setLenient(false);  // Enforce strict parsing
         try {
-            return dateFormat.parse(timestampStr);
+        	Date parsedDate = dateFormat.parse(timestampStr);
+            return parsedDate;
         } catch (ParseException e) {
             return null;  // Return null if parsing fails
         }
