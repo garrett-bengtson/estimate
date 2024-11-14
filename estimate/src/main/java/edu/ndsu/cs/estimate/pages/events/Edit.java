@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.TextField;
@@ -29,17 +30,17 @@ public class Edit {
     @Component
     private Form eventForm;
 
-    @Component(id = "name")
-    private TextField eventName;
+    @Property
+    private String name;
 
-    @Component(id = "category")
-    private TextField eventCategory;
+    @Property
+    private String category;
 
-    @Component(id = "description")
-    private TextField eventDescription;
+    @Property
+    private String description;
 
-    @Component(id = "eventDate")
-    private TextField eventDateField;
+    @Component(parameters = {"value=eventDateString", "type=text"})
+    private TextField eventDate;
 
     @Property
     private String eventDateString;
@@ -53,15 +54,36 @@ public class Edit {
     }
 
     void onValidateFromEventForm() {
-        if (eventForm.isValid()) {
-            Date eventDate = parseDate(eventDateString);
-            if (eventDate == null) {
-                eventForm.recordError(eventDateField, "Invalid date format for event date. Please use MM/dd/yyyy.");
-            } else {
-                event.setEventDate(eventDate);
-                eventDatabaseService.updateEvent(eventId, event.getName(), event.getDescription(), event.getCategory(), eventDate);
-            }
-        }
+    	boolean nameChanged = true;
+    	boolean descriptionChanged = true;
+    	boolean categoryChanged = true;
+    	
+    	if (eventDateString == null) {
+    		eventForm.recordError("Date must be included in event creation.");
+    	}
+    	else {
+    		Date eventDate = parseDate(eventDateString);
+        	if (eventDate == null) {
+        		eventForm.recordError("Invalid date format for event data. Please use MM/dd/yyyy.");
+        	}
+    		if (!eventForm.getHasErrors())	 {
+    			//If the user leaves a field blank, assume
+    			//they want to leave that field as it was.
+    			if (name == null) {
+    	    		name = event.getName();
+    	    	}
+    	    	if (description == null) {
+    	    		description = event.getDescription();
+    	    	}
+    	    	if (category == null || category.length() == 0) {
+    	    		category = event.getCategory();
+    	    	}
+//    			Event tempEvent = eventDatabaseService.createEvent(name, description, category, eventDate);
+//    			tempEvent.setEventDate(eventDate);
+                eventDatabaseService.updateEvent(eventId, name, description, category, eventDate);
+
+    		}
+    	}
     }
 
     Object onSuccessFromEventForm() {
@@ -71,7 +93,6 @@ public class Edit {
     private Date parseDate(String dateString) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            dateFormat.setLenient(false);
             return dateFormat.parse(dateString);
         } catch (Exception e) {
             return null;
