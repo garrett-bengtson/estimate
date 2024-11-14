@@ -6,24 +6,28 @@
             <t:form t:id="eventForm">
                 <t:errors/>
 
+				<div class="row justify-content-center text-center">
+                    <p>Leave the field blank if you don't want to change it.</p>
+                </div>
+
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
                         <t:label for="name" class="form-label"/>
-                        <t:textField t:id="name" value="event.name" class="form-control"/>
+                        <t:textField t:id="name" value="name" class="form-control"/>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
-                        <t:label for="category" class="form-label"/>
-                        <t:textField t:id="category" value="event.category" class="form-control"/>
+                        <t:label for="categorySelect" class="form-label"/>
+                        <t:select t:id="categorySelect" value="category" model="uniqueCategories" class="form-control"/>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
                         <t:label for="description" class="form-label"/>
-                        <t:textarea t:id="description" value="event.description" class="form-control" rows="5"/>
+                        <t:textarea t:id="description" value="description" class="form-control" rows="5"/>
                     </div>
                 </div>
 
@@ -40,12 +44,14 @@
                 </div>
 
                 <div class="row justify-content-center mb-5">
-                    <div class="col-md-6 col-lg-4 mb-3 d-grid gap-2">
-                        <input type="submit" class="btn btn-primary" value="Update Event"/>
-                        <t:pagelink page="events/SetResult" context="eventId" class="btn btn-info">Set Result</t:pagelink>
-                        <t:pagelink page="events" class="btn btn-secondary">Go back</t:pagelink>
-                    </div>
-                </div>
+				    <div class="col-md-6 col-lg-4 mb-3 d-grid gap-2">
+				        <input type="submit" class="btn btn-primary" value="Update Event"/>
+				        <t:if test="isAdmin">
+				            <t:pagelink page="events/SetResult" context="eventId" class="btn btn-info">Set Result</t:pagelink>
+				        </t:if>   
+				        <t:pagelink page="events" class="btn btn-secondary">Go back</t:pagelink>
+			    	</div>
+				</div>
             </t:form>
         </div>
         <script src="/js/dateInputEdit.js"></script>

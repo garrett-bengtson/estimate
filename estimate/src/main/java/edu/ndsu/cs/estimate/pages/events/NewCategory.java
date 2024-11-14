@@ -98,7 +98,8 @@ public class NewCategory {
         }
         if (eventDateString == null) {
             eventForm.recordError("Date must be included in event creation.");
-        } else {
+        }
+        if(!eventForm.getHasErrors()){
             Date eventDate = parseDate(eventDateString);
             if (eventDate == null) {
                 eventForm.recordError("Invalid date format for event date. Please use MM/dd/yyyy.");
