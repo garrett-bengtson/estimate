@@ -37,10 +37,13 @@ public class Add {
     
     @Property
     private String name;
+ 
     @Property
     private String description;
+  
     @Property
     private String category;
+  
     @Property
     private String eventDateString;
 

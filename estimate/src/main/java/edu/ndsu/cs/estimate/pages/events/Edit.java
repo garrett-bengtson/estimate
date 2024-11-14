@@ -22,6 +22,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.corelib.components.TextField;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.tynamo.security.services.SecurityService;
+
+import edu.ndsu.cs.estimate.cayenne.persistent.Event;
+import edu.ndsu.cs.estimate.services.database.interfaces.EventDatabaseService;
+
 public class Edit {
 
     @Inject
@@ -129,5 +141,23 @@ public class Edit {
         } catch (Exception e) {
             return null;
         }
+        
     }
+    
+
+    
+    @Property
+    private boolean isAdmin;
+
+    @Inject
+    private SecurityService securityService;
+
+    void setupRender() {
+        // Check if the current user has the "admin" role
+        isAdmin = securityService.hasRole("admin");
+    }
+    
+
+    	
+    
 }
