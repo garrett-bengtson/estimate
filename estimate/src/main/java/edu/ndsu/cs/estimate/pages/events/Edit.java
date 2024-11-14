@@ -142,22 +142,5 @@ public class Edit {
             return null;
         }
         
-    }
-    
-
-    
-    @Property
-    private boolean isAdmin;
-
-    @Inject
-    private SecurityService securityService;
-
-    void setupRender() {
-        // Check if the current user has the "admin" role
-        isAdmin = securityService.hasRole("admin");
-    }
-    
-
-    	
-    
+    }	
 }
