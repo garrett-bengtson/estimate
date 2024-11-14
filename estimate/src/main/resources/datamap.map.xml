@@ -66,6 +66,7 @@
 		</db-attribute>
 		<db-attribute name="UserId" type="INTEGER" isMandatory="true"/>
 		<db-attribute name="WillNotComplete" type="BOOLEAN" isMandatory="true"/>
+		<db-attribute name="CannotComplete" type="BOOLEAN" isMandatory="true"/>
 	</db-entity>
 	<db-entity name="UserAccounts_Roles_JoinTable">
 		<db-attribute name="RolesPK" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
@@ -120,6 +121,8 @@
 		<obj-attribute name="startDate" type="java.util.Date" db-attribute-path="StartDate"/>
 		<obj-attribute name="timeTaken" type="int" db-attribute-path="TimeTaken"/>
 		<obj-attribute name="willNotComplete" type="boolean" db-attribute-path="WillNotComplete"/>
+		<obj-attribute name="cannotComplete" type="boolean" db-attribute-path="CannotComplete"/>
+		
 	</obj-entity>
 	<obj-entity name="User" className="edu.ndsu.cs.estimate.cayenne.persistent.User" dbEntityName="Users">
 		<obj-attribute name="passwordHash" type="java.lang.String" db-attribute-path="PasswordHash"/>

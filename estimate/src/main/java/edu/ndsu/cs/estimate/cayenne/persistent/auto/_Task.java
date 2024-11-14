@@ -33,6 +33,7 @@ public abstract class _Task extends BaseDataObject {
     public static final Property<Date> START_DATE = Property.create("startDate", Date.class);
     public static final Property<Integer> TIME_TAKEN = Property.create("timeTaken", Integer.class);
     public static final Property<Boolean> WILL_NOT_COMPLETE = Property.create("willNotComplete", Boolean.class);
+    public static final Property<Boolean> CANNOT_COMPLETE = Property.create("cannotComplete", Boolean.class);
     public static final Property<User> USER = Property.create("user", User.class);
 
     protected LocalDate actualEndDate;
@@ -43,6 +44,7 @@ public abstract class _Task extends BaseDataObject {
     protected Date startDate;
     protected Integer timeTaken;
     protected boolean willNotComplete;
+    protected boolean cannotComplete;
 
     protected Object user;
 
@@ -128,6 +130,16 @@ public abstract class _Task extends BaseDataObject {
         beforePropertyRead("willNotComplete");
         return this.willNotComplete;
     }
+	
+	public void setCannotComplete(boolean cannotComplete) {
+        beforePropertyWrite("cannotComplete", this.cannotComplete, cannotComplete);
+        this.cannotComplete = cannotComplete;
+    }
+
+	public boolean isCannotComplete() {
+        beforePropertyRead("cannotComplete");
+        return this.cannotComplete;
+    }
 
     public void setUser(User user) {
         setToOneTarget("user", user, true);
@@ -160,6 +172,8 @@ public abstract class _Task extends BaseDataObject {
                 return this.timeTaken;
             case "willNotComplete":
                 return this.willNotComplete;
+            case "cannotComplete":
+            	return this.cannotComplete;
             case "user":
                 return this.user;
             default:
@@ -198,6 +212,8 @@ public abstract class _Task extends BaseDataObject {
             case "willNotComplete":
                 this.willNotComplete = val == null ? false : (boolean)val;
                 break;
+            case "cannotComplete":
+            	this.cannotComplete = val == null ? false: (boolean)val;
             case "user":
                 this.user = val;
                 break;
@@ -225,6 +241,7 @@ public abstract class _Task extends BaseDataObject {
         out.writeObject(this.startDate);
         out.writeObject(this.timeTaken);
         out.writeBoolean(this.willNotComplete);
+        out.writeBoolean(this.cannotComplete);
         out.writeObject(this.user);
     }
 
@@ -239,6 +256,7 @@ public abstract class _Task extends BaseDataObject {
         this.startDate = (Date)in.readObject();
         this.timeTaken = (Integer)in.readObject();
         this.willNotComplete = in.readBoolean();
+        this.cannotComplete = in.readBoolean();
         this.user = in.readObject();
     }
 

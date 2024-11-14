@@ -49,7 +49,12 @@ public class Task extends _Task implements TaskInterface{
 	public boolean getWillNotComplete() {
 		return false;
 	}
-
+	
+	@Override
+	public boolean getCannotComplete() {
+		return false;
+	}
+	
 	@Override
 	public void setUser(UserAccount user) {
 		setUser((User)user);

@@ -219,6 +219,7 @@ public class Index {
     		Boolean dropped = t.getDropped();
     		Boolean completed = t.getCompleted();
     		Boolean willNotComplete = t.getWillNotComplete();
+    		Boolean cannotComplete = t.getCannotComplete();
     		if(dropped.equals(true))
     		{
     			Status.add("Dropped");
@@ -228,7 +229,10 @@ public class Index {
     		} else if (willNotComplete.equals(true))
     		{
     			Status.add("Will not complete");
-    		} else
+    		} else if (cannotComplete.equals(true))
+    		{
+    			Status.add("Cannot complete");
+    		}else
     		{
     			Status.add("In Progress");
     		}

@@ -22,10 +22,10 @@ public class MockTask implements TaskInterface {
     private Integer timeTaken;
     private UserAccount user;
     private boolean willNotComplete;
-	
+	private boolean cannotComplete;
 	private static int nextPK = 1; 
 	
-	private MockTask(int PK, String name, int timeTaken, Date startDate, Date estEndDate, LocalDate actualEndDate, boolean completed, boolean dropped, UserAccount user, boolean willNotComplete) {
+	private MockTask(int PK, String name, int timeTaken, Date startDate, Date estEndDate, LocalDate actualEndDate, boolean completed, boolean dropped, UserAccount user, boolean willNotComplete, boolean cannotComplete) {
 		super();
 		this.PK 				= PK; 
 		this.name 				= name;
@@ -37,14 +37,15 @@ public class MockTask implements TaskInterface {
 		this.dropped 			= dropped;
 		this.user 				= user;
 		this.willNotComplete 	= willNotComplete;
+		this.cannotComplete		= cannotComplete;
 	}
 	
 	public MockTask() {
-		this(nextPK++, "Unknown", 0, new Date(0), new Date(0),LocalDate.now(),false,false, new User(), false);
+		this(nextPK++, "Unknown", 0, new Date(0), new Date(0),LocalDate.now(),false,false, new User(), false, false);
 	}
 	
-	public MockTask(String name, int timeTaken, Date startDate, Date estEndDate, LocalDate actualEndDate, boolean completed, boolean dropped, UserAccount user, boolean willNotComplete) {
-		this(nextPK++, name, timeTaken, startDate, estEndDate, actualEndDate, completed, dropped, user, willNotComplete);
+	public MockTask(String name, int timeTaken, Date startDate, Date estEndDate, LocalDate actualEndDate, boolean completed, boolean dropped, UserAccount user, boolean willNotComplete, boolean cannotComplete) {
+		this(nextPK++, name, timeTaken, startDate, estEndDate, actualEndDate, completed, dropped, user, willNotComplete, cannotComplete);
 	}
 	
 	public Integer getPK() {
@@ -61,7 +62,7 @@ public class MockTask implements TaskInterface {
 	
 	@Override
 	public TaskInterface clone() {
-		return new MockTask(PK, name, timeTaken, startDate, estEndDate, actualEndDate, completed, dropped, user, willNotComplete);
+		return new MockTask(PK, name, timeTaken, startDate, estEndDate, actualEndDate, completed, dropped, user, willNotComplete, cannotComplete);
 	}
 	
 	@Override
@@ -163,7 +164,17 @@ public class MockTask implements TaskInterface {
 	public void setWillNotComplete(boolean willNotComplete) {
 		this.willNotComplete = willNotComplete;
 	}
-
+	@Override
+	public boolean getCannotComplete() {
+		return this.cannotComplete;
+	}
+	
+	@Override
+	public void setCannotComplete(boolean cannotComplete) {
+		this.cannotComplete = cannotComplete;
+	}
+	
+	
 	@Override
 	public void setObjectContext(ObjectContext obj) {
 		// TODO Auto-generated method stub	

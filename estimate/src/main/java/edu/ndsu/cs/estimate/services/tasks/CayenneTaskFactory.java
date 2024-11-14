@@ -24,6 +24,7 @@ public class CayenneTaskFactory {
 		cayenneTask.setStartDate(mockTask.getStartDate());
 		cayenneTask.setTimeTaken(mockTask.getTimeTaken());
 		cayenneTask.setWillNotComplete(mockTask.getWillNotComplete());
+		cayenneTask.setCannotComplete(mockTask.getCannotComplete());
 		cayenneTask.setUser(mockTask.getUser());
 	
 		System.err.println("Task created... start date " + cayenneTask.getEstEndDate().toString() + "primary key: " + cayenneTask.getPK());
