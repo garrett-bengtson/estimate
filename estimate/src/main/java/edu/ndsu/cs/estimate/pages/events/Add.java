@@ -7,6 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.alerts.AlertManager;
 import org.apache.tapestry5.alerts.Duration;
 import org.apache.tapestry5.alerts.Severity;
@@ -22,10 +23,13 @@ public class Add {
 
     @Property
     private String name;
+ 
     @Property
     private String description;
+  
     @Property
     private String category;
+  
     @Property
     private String eventDateString;
 
@@ -50,15 +54,18 @@ public class Add {
     	}
     	if (eventDateString == null) {
     		eventForm.recordError("Date must be included in event creation.");
-    	} else {
-    		Date eventDate = parseDate(eventDateString);
-            if (eventDate == null) {
-                eventForm.recordError("Invalid date format for event date. Please use MM/dd/yyyy.");
-            } else {
-                Event event = eventDatabaseService.createEvent(name, description, category, eventDate);
-                event.setEventDate(eventDate);
-            }
     	}
+    	else {
+    		Date eventDate = parseDate(eventDateString);
+        	if (eventDate ==null) {
+        		eventForm.recordError("Invalid date format for event data. Please use MM/dd/yyyy.");
+        	}
+    		if (!eventForm.getHasErrors())	 {
+    			Event event = eventDatabaseService.createEvent(name, description, category, eventDate);
+    			event.setEventDate(eventDate);
+    		}
+    	}
+        
 			
     }
 

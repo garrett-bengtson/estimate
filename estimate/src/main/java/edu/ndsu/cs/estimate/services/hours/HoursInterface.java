@@ -40,8 +40,8 @@ public interface HoursInterface {
 		} else if (getTimestamp().after(now)) {
 			errors.add("Time must be now or before current date.");
 		}
-		else if (getHoursLogged() == 0 || getHoursLogged() < 0) {
-			errors.add("Hours must be valid.");
+		else if (getHoursLogged() == 0) {
+			errors.add("There is no reason to log 0 hours!");
 		}
 
 		return errors; 

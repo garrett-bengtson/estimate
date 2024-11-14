@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const datePickerElement = document.getElementById('eventDatePicker');
+	const datePickerElements = document.querySelectorAll('.datetimepicker-group');
     
-    if (datePickerElement) {
+    if (datePickerElements) {
         const options = {
             display: {
                 components: {
@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 format: 'MM/dd/yyyy'
             },
             restrictions: {
-                minDate: new Date()
             },
             dateRange: false,
         };
 
-        new tempusDominus.TempusDominus(datePickerElement, options);
-
+		datePickerElements.forEach(element => {
+			new tempusDominus.TempusDominus(element, options);
+		});
     } else {
         console.error('Date picker element not found.');
     }
