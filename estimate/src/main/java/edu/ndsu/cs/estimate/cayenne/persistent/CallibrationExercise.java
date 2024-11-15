@@ -13,7 +13,7 @@ public class CallibrationExercise extends _CallibrationExercise implements Estim
     {
     	if(getObjectId() != null && !getObjectId().isTemporary())
     	{
-    		return (Integer) getObjectId().getIdSnapshot().get(EXERSISE_ID_PK_COLUMN);
+    		return (Integer) getObjectId().getIdSnapshot().get(EXERCISE_ID_PK_COLUMN);
     	}
     	return null; 
     }

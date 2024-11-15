@@ -78,7 +78,7 @@ public class CreateEstimate {
 		}
 		
 		if(errors.isEmpty()) {
-			estimate.setExersise(exercise);
+			estimate.setExercise(exercise);
 			estimate.setUser((User) userAccount);
 			estimateDatabaseService.updateEstimate(estimate);
 			exercise.addToEstimates(estimate);

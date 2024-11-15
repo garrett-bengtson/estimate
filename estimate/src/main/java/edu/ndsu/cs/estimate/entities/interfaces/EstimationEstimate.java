@@ -13,8 +13,8 @@ public interface EstimationEstimate {
 	public int 		getPercentPrediction();
 	public void	  	setPercentPrediction(int percentPrediction);
 	
-	public void setExersise(EstimationExercise exersise);
-    public EstimationExercise getExersise();
+	public void setExercise(EstimationExercise exersise);
+    public EstimationExercise getExercise();
 
 	public void setUser(User user);
     public User getUser();

@@ -5,8 +5,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.EntityProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.NumericProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationExercise;
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
@@ -19,18 +21,18 @@ import edu.ndsu.cs.estimate.cayenne.persistent.User;
  */
 public abstract class _CallibrationEstimate extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> ESTIMATE_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("EstimateID"), Integer.class);
+    public static final NumericIdProperty<Integer> ESTIMATE_ID_PK_PROPERTY = PropertyFactory.createNumericId("EstimateID", "CallibrationEstimate", Integer.class);
     public static final String ESTIMATE_ID_PK_COLUMN = "EstimateID";
 
-    public static final Property<Integer> PERCENT_PREDICTION = Property.create("percentPrediction", Integer.class);
-    public static final Property<CallibrationExercise> EXERSISE = Property.create("exersise", CallibrationExercise.class);
-    public static final Property<User> USER = Property.create("user", User.class);
+    public static final NumericProperty<Integer> PERCENT_PREDICTION = PropertyFactory.createNumeric("percentPrediction", Integer.class);
+    public static final EntityProperty<CallibrationExercise> EXERCISE = PropertyFactory.createEntity("exercise", CallibrationExercise.class);
+    public static final EntityProperty<User> USER = PropertyFactory.createEntity("user", User.class);
 
     protected int percentPrediction;
 
-    protected Object exersise;
+    protected Object exercise;
     protected Object user;
 
     public void setPercentPrediction(int percentPrediction) {
@@ -43,12 +45,12 @@ public abstract class _CallibrationEstimate extends BaseDataObject {
         return this.percentPrediction;
     }
 
-    public void setExersise(CallibrationExercise exersise) {
-        setToOneTarget("exersise", exersise, true);
+    public void setExercise(CallibrationExercise exercise) {
+        setToOneTarget("exercise", exercise, true);
     }
 
-    public CallibrationExercise getExersise() {
-        return (CallibrationExercise)readProperty("exersise");
+    public CallibrationExercise getExercise() {
+        return (CallibrationExercise)readProperty("exercise");
     }
 
     public void setUser(User user) {
@@ -68,8 +70,8 @@ public abstract class _CallibrationEstimate extends BaseDataObject {
         switch(propName) {
             case "percentPrediction":
                 return this.percentPrediction;
-            case "exersise":
-                return this.exersise;
+            case "exercise":
+                return this.exercise;
             case "user":
                 return this.user;
             default:
@@ -87,8 +89,8 @@ public abstract class _CallibrationEstimate extends BaseDataObject {
             case "percentPrediction":
                 this.percentPrediction = val == null ? 0 : (int)val;
                 break;
-            case "exersise":
-                this.exersise = val;
+            case "exercise":
+                this.exercise = val;
                 break;
             case "user":
                 this.user = val;
@@ -110,7 +112,7 @@ public abstract class _CallibrationEstimate extends BaseDataObject {
     protected void writeState(ObjectOutputStream out) throws IOException {
         super.writeState(out);
         out.writeInt(this.percentPrediction);
-        out.writeObject(this.exersise);
+        out.writeObject(this.exercise);
         out.writeObject(this.user);
     }
 
@@ -118,7 +120,7 @@ public abstract class _CallibrationEstimate extends BaseDataObject {
     protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
         super.readState(in);
         this.percentPrediction = in.readInt();
-        this.exersise = in.readObject();
+        this.exercise = in.readObject();
         this.user = in.readObject();
     }
 

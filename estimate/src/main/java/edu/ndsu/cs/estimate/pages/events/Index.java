@@ -13,6 +13,7 @@ import org.apache.tapestry5.internal.SelectModelImpl;
 import org.apache.tapestry5.EventContext;
 import org.apache.tapestry5.OptionModel;
 import org.apache.tapestry5.SelectModel;
+import org.apache.tapestry5.alerts.AlertManager;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -30,6 +31,9 @@ public class Index {
     @Inject
     private EventDatabaseService db;
 
+    @Inject
+    private AlertManager alertManager;
+    
     @Property
     private List<Event> events;
     

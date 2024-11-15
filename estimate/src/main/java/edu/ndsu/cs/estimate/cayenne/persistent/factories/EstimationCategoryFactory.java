@@ -48,8 +48,8 @@ public class EstimationCategoryFactory {
 			{
 				exercise[j] = context.newObject(CallibrationExercise.class);
 				exercise[j].setName(events[i][j]);
-				exercise[j].setDescritption(eventDescriptions[i][j]);
-				category[i].addToExersises(exercise[j]);
+				exercise[j].setDescription(eventDescriptions[i][j]);
+				category[i].addToExercises(exercise[j]);
 			}
 		}
 		context.commitChanges();

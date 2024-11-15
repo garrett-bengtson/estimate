@@ -32,7 +32,6 @@ public interface UserAccountDatabaseService {
 	
 	public boolean 						isUsernameTaken(String userName);
 	
-	
 
 	/* Method to perform validation on a UserAccount. It first validates any of the
 	 *  values for the account specifically to ensure that they're not improper. 

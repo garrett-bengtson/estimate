@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.ListProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationExercise;
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationSuggestion;
@@ -20,20 +22,20 @@ import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationSuggestion;
  */
 public abstract class _CallibrationCategory extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> CATEGORY_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("CategoryID"), Integer.class);
+    public static final NumericIdProperty<Integer> CATEGORY_ID_PK_PROPERTY = PropertyFactory.createNumericId("CategoryID", "CallibrationCategory", Integer.class);
     public static final String CATEGORY_ID_PK_COLUMN = "CategoryID";
 
-    public static final Property<String> DESCRIPTION = Property.create("description", String.class);
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<List<CallibrationExercise>> EXERSISES = Property.create("exersises", List.class);
-    public static final Property<List<CallibrationSuggestion>> SUGGESTIONS = Property.create("suggestions", List.class);
+    public static final StringProperty<String> DESCRIPTION = PropertyFactory.createString("description", String.class);
+    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
+    public static final ListProperty<CallibrationExercise> EXERCISES = PropertyFactory.createList("exercises", CallibrationExercise.class);
+    public static final ListProperty<CallibrationSuggestion> SUGGESTIONS = PropertyFactory.createList("suggestions", CallibrationSuggestion.class);
 
     protected String description;
     protected String name;
 
-    protected Object exersises;
+    protected Object exercises;
     protected Object suggestions;
 
     public void setDescription(String description) {
@@ -56,17 +58,17 @@ public abstract class _CallibrationCategory extends BaseDataObject {
         return this.name;
     }
 
-    public void addToExersises(CallibrationExercise obj) {
-        addToManyTarget("exersises", obj, true);
+    public void addToExercises(CallibrationExercise obj) {
+        addToManyTarget("exercises", obj, true);
     }
 
-    public void removeFromExersises(CallibrationExercise obj) {
-        removeToManyTarget("exersises", obj, true);
+    public void removeFromExercises(CallibrationExercise obj) {
+        removeToManyTarget("exercises", obj, true);
     }
 
     @SuppressWarnings("unchecked")
-    public List<CallibrationExercise> getExersises() {
-        return (List<CallibrationExercise>)readProperty("exersises");
+    public List<CallibrationExercise> getExercises() {
+        return (List<CallibrationExercise>)readProperty("exercises");
     }
 
     public void addToSuggestions(CallibrationSuggestion obj) {
@@ -93,8 +95,8 @@ public abstract class _CallibrationCategory extends BaseDataObject {
                 return this.description;
             case "name":
                 return this.name;
-            case "exersises":
-                return this.exersises;
+            case "exercises":
+                return this.exercises;
             case "suggestions":
                 return this.suggestions;
             default:
@@ -115,8 +117,8 @@ public abstract class _CallibrationCategory extends BaseDataObject {
             case "name":
                 this.name = (String)val;
                 break;
-            case "exersises":
-                this.exersises = val;
+            case "exercises":
+                this.exercises = val;
                 break;
             case "suggestions":
                 this.suggestions = val;
@@ -139,7 +141,7 @@ public abstract class _CallibrationCategory extends BaseDataObject {
         super.writeState(out);
         out.writeObject(this.description);
         out.writeObject(this.name);
-        out.writeObject(this.exersises);
+        out.writeObject(this.exercises);
         out.writeObject(this.suggestions);
     }
 
@@ -148,7 +150,7 @@ public abstract class _CallibrationCategory extends BaseDataObject {
         super.readState(in);
         this.description = (String)in.readObject();
         this.name = (String)in.readObject();
-        this.exersises = in.readObject();
+        this.exercises = in.readObject();
         this.suggestions = in.readObject();
     }
 

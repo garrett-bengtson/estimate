@@ -36,7 +36,7 @@ public class ViewExercises {
 	void setupRender() {
 		if(categoryPK != null) {
 			category = categoryDatabaseService.getCategory(categoryPK);
-			exercises = category.getExersises();
+			exercises = category.getExercises();
 			for(int i = 0; i < exercises.size(); i++)
 			{
 				if(exercises.get(i).getOutcomeReported())

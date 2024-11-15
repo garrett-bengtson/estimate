@@ -38,12 +38,18 @@ public class User extends _User implements UserAccount{
 
 	@Override
 	public void addRole(RoleInterface role) {
-		this.addToRoles((Role)role);
+		if(!this.getRoles().contains(role)) {
+			this.addToRoles((Role)role);
+			this.getObjectContext().commitChanges();
+		}
 	}
 
 	@Override
 	public void deleteRole(RoleInterface role) {
-		this.removeFromRoles((Role)role);
+		if(this.getRoles().contains(role)) {
+			this.removeFromRoles((Role)role);
+			this.getObjectContext().commitChanges();
+		}
 	} 
 
 	@Override

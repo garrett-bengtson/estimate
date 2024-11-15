@@ -13,8 +13,8 @@ public interface EstimationExercise {
 	public String 	getName();
 	public void	  	setName(String name);
 	
-	public String  	getDescritption();
-	public void   	setDescritption(String description);
+	public String  	getDescription();
+	public void   	setDescription(String description);
 
 	public boolean  getOutcome();
 	public void     setOutcome(boolean outcome);

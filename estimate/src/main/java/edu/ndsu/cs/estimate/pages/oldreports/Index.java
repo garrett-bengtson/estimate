@@ -148,6 +148,7 @@ public class Index {
 	}
 	
 	//Most likely will not use, can probably be removed later
+	@SuppressWarnings("deprecation")
 	public void recreateGraph() {
 		System.out.println("hello two");
 		Date start = new Date("12/1/2022");

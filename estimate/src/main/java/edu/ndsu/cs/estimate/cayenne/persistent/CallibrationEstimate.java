@@ -18,7 +18,7 @@ public class CallibrationEstimate extends _CallibrationEstimate implements Estim
     }
 
 	@Override
-	public void setExersise(EstimationExercise exersise) {
-		setExersise((CallibrationExercise) exersise);
+	public void setExercise(EstimationExercise exercise) {
+		setExercise((CallibrationExercise) exercise);
 	}
 }

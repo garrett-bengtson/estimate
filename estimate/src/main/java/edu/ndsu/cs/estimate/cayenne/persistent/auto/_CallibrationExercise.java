@@ -6,8 +6,11 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.BaseProperty;
+import org.apache.cayenne.exp.property.ListProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationCategory;
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationEstimate;
@@ -20,19 +23,19 @@ import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationEstimate;
  */
 public abstract class _CallibrationExercise extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> EXERSISE_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("ExersiseID"), Integer.class);
-    public static final String EXERSISE_ID_PK_COLUMN = "ExersiseID";
+    public static final NumericIdProperty<Integer> EXERCISE_ID_PK_PROPERTY = PropertyFactory.createNumericId("ExerciseID", "CallibrationExercise", Integer.class);
+    public static final String EXERCISE_ID_PK_COLUMN = "ExerciseID";
 
-    public static final Property<String> DESCRITPTION = Property.create("descritption", String.class);
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<Boolean> OUTCOME = Property.create("outcome", Boolean.class);
-    public static final Property<Boolean> OUTCOME_REPORTED = Property.create("outcomeReported", Boolean.class);
-    public static final Property<List<CallibrationCategory>> CATEGORIES = Property.create("categories", List.class);
-    public static final Property<List<CallibrationEstimate>> ESTIMATES = Property.create("estimates", List.class);
+    public static final StringProperty<String> DESCRIPTION = PropertyFactory.createString("description", String.class);
+    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
+    public static final BaseProperty<Boolean> OUTCOME = PropertyFactory.createBase("outcome", Boolean.class);
+    public static final BaseProperty<Boolean> OUTCOME_REPORTED = PropertyFactory.createBase("outcomeReported", Boolean.class);
+    public static final ListProperty<CallibrationCategory> CATEGORIES = PropertyFactory.createList("categories", CallibrationCategory.class);
+    public static final ListProperty<CallibrationEstimate> ESTIMATES = PropertyFactory.createList("estimates", CallibrationEstimate.class);
 
-    protected String descritption;
+    protected String description;
     protected String name;
     protected Boolean outcome;
     protected Boolean outcomeReported;
@@ -40,14 +43,14 @@ public abstract class _CallibrationExercise extends BaseDataObject {
     protected Object categories;
     protected Object estimates;
 
-    public void setDescritption(String descritption) {
-        beforePropertyWrite("descritption", this.descritption, descritption);
-        this.descritption = descritption;
+    public void setDescription(String description) {
+        beforePropertyWrite("description", this.description, description);
+        this.description = description;
     }
 
-    public String getDescritption() {
-        beforePropertyRead("descritption");
-        return this.descritption;
+    public String getDescription() {
+        beforePropertyRead("description");
+        return this.description;
     }
 
     public void setName(String name) {
@@ -119,8 +122,8 @@ public abstract class _CallibrationExercise extends BaseDataObject {
         }
 
         switch(propName) {
-            case "descritption":
-                return this.descritption;
+            case "description":
+                return this.description;
             case "name":
                 return this.name;
             case "outcome":
@@ -143,8 +146,8 @@ public abstract class _CallibrationExercise extends BaseDataObject {
         }
 
         switch (propName) {
-            case "descritption":
-                this.descritption = (String)val;
+            case "description":
+                this.description = (String)val;
                 break;
             case "name":
                 this.name = (String)val;
@@ -177,7 +180,7 @@ public abstract class _CallibrationExercise extends BaseDataObject {
     @Override
     protected void writeState(ObjectOutputStream out) throws IOException {
         super.writeState(out);
-        out.writeObject(this.descritption);
+        out.writeObject(this.description);
         out.writeObject(this.name);
         out.writeObject(this.outcome);
         out.writeObject(this.outcomeReported);
@@ -188,7 +191,7 @@ public abstract class _CallibrationExercise extends BaseDataObject {
     @Override
     protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
         super.readState(in);
-        this.descritption = (String)in.readObject();
+        this.description = (String)in.readObject();
         this.name = (String)in.readObject();
         this.outcome = (Boolean)in.readObject();
         this.outcomeReported = (Boolean)in.readObject();

@@ -34,7 +34,7 @@ public class CayenneServiceImpl implements CayenneService {
 		String[] descriptions  = {"Will the bears win the game Tuesday?", "Will Billy be elected as emperor?"};
 		CallibrationExercise exercise = context.newObject(CallibrationExercise.class);
 		exercise.setName(names[index]);
-		exercise.setDescritption(descriptions[index]);
+		exercise.setDescription(descriptions[index]);
 			
 		return exercise; 
 	}

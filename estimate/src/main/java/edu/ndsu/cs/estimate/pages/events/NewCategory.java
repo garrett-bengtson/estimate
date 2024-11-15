@@ -70,9 +70,21 @@ public class NewCategory {
     private PageRenderLinkSource pageRenderLinkSource;
 
     void setupRender() {
-        String principal = securityService.getSubject().getPrincipal().toString();
-        userAccount = userAccountDatabaseService.getUserAccount(principal);
-
+    	//Check if user is logged in
+    	if(securityService.getSubject().getPrincipal() != null) {
+    		String principal = securityService.getSubject().getPrincipal().toString();
+        	userAccount = userAccountDatabaseService.getUserAccount(principal);
+    	}
+    	//Redirect user to the login page
+    	else {
+    		Link link = pageRenderLinkSource.createPageRenderLink("Login");
+            try {
+                response.sendRedirect(link.toURI());
+            } catch (IOException e) {
+                throw new RuntimeException("Redirection failed", e);
+            }
+    	}
+    	
         // Check if the user is an admin
         if (!userAccount.isAdmin()) {
             alertManager.alert(Duration.SINGLE, Severity.ERROR, "Access denied. Only admins can create new categories.");

@@ -43,7 +43,7 @@ public class ModeratorPage {
 		exercise = exerciseDatabaseService.getNewExerciseFromContext(suggestion.getCategories().get(0).getObjectContext());
 		
 		exercise.setName(suggestion.getName());
-		exercise.setDescritption(suggestion.getDescription());
+		exercise.setDescription(suggestion.getDescription());
 		exercise.addToCategories(suggestion.getCategories().get(0));
 		exerciseDatabaseService.updateExercise(exercise);	
 		suggestionDatabaseService.deleteSuggestion(suggestion.getPK());

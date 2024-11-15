@@ -7,8 +7,13 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.BaseProperty;
+import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.EntityProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.NumericProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
 
@@ -20,23 +25,24 @@ import edu.ndsu.cs.estimate.cayenne.persistent.User;
  */
 public abstract class _Task extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> TASK_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("TaskId"), Integer.class);
+    public static final NumericIdProperty<Integer> TASK_ID_PK_PROPERTY = PropertyFactory.createNumericId("TaskId", "Task", Integer.class);
     public static final String TASK_ID_PK_COLUMN = "TaskId";
 
-    public static final Property<LocalDate> ACTUAL_END_DATE = Property.create("actualEndDate", LocalDate.class);
-    public static final Property<Boolean> COMPLETED = Property.create("completed", Boolean.class);
-    public static final Property<Boolean> DROPPED = Property.create("dropped", Boolean.class);
-    public static final Property<Date> EST_END_DATE = Property.create("estEndDate", Date.class);
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<Date> START_DATE = Property.create("startDate", Date.class);
-    public static final Property<Integer> TIME_TAKEN = Property.create("timeTaken", Integer.class);
-    public static final Property<Boolean> WILL_NOT_COMPLETE = Property.create("willNotComplete", Boolean.class);
-    public static final Property<Boolean> CANNOT_COMPLETE = Property.create("cannotComplete", Boolean.class);
-    public static final Property<User> USER = Property.create("user", User.class);
+    public static final DateProperty<LocalDate> ACTUAL_END_DATE = PropertyFactory.createDate("actualEndDate", LocalDate.class);
+    public static final BaseProperty<Boolean> CANNOT_COMPLETE = PropertyFactory.createBase("cannotComplete", Boolean.class);
+    public static final BaseProperty<Boolean> COMPLETED = PropertyFactory.createBase("completed", Boolean.class);
+    public static final BaseProperty<Boolean> DROPPED = PropertyFactory.createBase("dropped", Boolean.class);
+    public static final DateProperty<Date> EST_END_DATE = PropertyFactory.createDate("estEndDate", Date.class);
+    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
+    public static final DateProperty<Date> START_DATE = PropertyFactory.createDate("startDate", Date.class);
+    public static final NumericProperty<Integer> TIME_TAKEN = PropertyFactory.createNumeric("timeTaken", Integer.class);
+    public static final BaseProperty<Boolean> WILL_NOT_COMPLETE = PropertyFactory.createBase("willNotComplete", Boolean.class);
+    public static final EntityProperty<User> USER = PropertyFactory.createEntity("user", User.class);
 
     protected LocalDate actualEndDate;
+    protected boolean cannotComplete;
     protected boolean completed;
     protected boolean dropped;
     protected Date estEndDate;
@@ -44,7 +50,6 @@ public abstract class _Task extends BaseDataObject {
     protected Date startDate;
     protected Integer timeTaken;
     protected boolean willNotComplete;
-    protected boolean cannotComplete;
 
     protected Object user;
 
@@ -56,6 +61,16 @@ public abstract class _Task extends BaseDataObject {
     public LocalDate getActualEndDate() {
         beforePropertyRead("actualEndDate");
         return this.actualEndDate;
+    }
+
+    public void setCannotComplete(boolean cannotComplete) {
+        beforePropertyWrite("cannotComplete", this.cannotComplete, cannotComplete);
+        this.cannotComplete = cannotComplete;
+    }
+
+	public boolean isCannotComplete() {
+        beforePropertyRead("cannotComplete");
+        return this.cannotComplete;
     }
 
     public void setCompleted(boolean completed) {
@@ -130,16 +145,6 @@ public abstract class _Task extends BaseDataObject {
         beforePropertyRead("willNotComplete");
         return this.willNotComplete;
     }
-	
-	public void setCannotComplete(boolean cannotComplete) {
-        beforePropertyWrite("cannotComplete", this.cannotComplete, cannotComplete);
-        this.cannotComplete = cannotComplete;
-    }
-
-	public boolean isCannotComplete() {
-        beforePropertyRead("cannotComplete");
-        return this.cannotComplete;
-    }
 
     public void setUser(User user) {
         setToOneTarget("user", user, true);
@@ -158,6 +163,8 @@ public abstract class _Task extends BaseDataObject {
         switch(propName) {
             case "actualEndDate":
                 return this.actualEndDate;
+            case "cannotComplete":
+                return this.cannotComplete;
             case "completed":
                 return this.completed;
             case "dropped":
@@ -172,8 +179,6 @@ public abstract class _Task extends BaseDataObject {
                 return this.timeTaken;
             case "willNotComplete":
                 return this.willNotComplete;
-            case "cannotComplete":
-            	return this.cannotComplete;
             case "user":
                 return this.user;
             default:
@@ -190,6 +195,9 @@ public abstract class _Task extends BaseDataObject {
         switch (propName) {
             case "actualEndDate":
                 this.actualEndDate = (LocalDate)val;
+                break;
+            case "cannotComplete":
+                this.cannotComplete = val == null ? false : (boolean)val;
                 break;
             case "completed":
                 this.completed = val == null ? false : (boolean)val;
@@ -212,8 +220,6 @@ public abstract class _Task extends BaseDataObject {
             case "willNotComplete":
                 this.willNotComplete = val == null ? false : (boolean)val;
                 break;
-            case "cannotComplete":
-            	this.cannotComplete = val == null ? false: (boolean)val;
             case "user":
                 this.user = val;
                 break;
@@ -234,6 +240,7 @@ public abstract class _Task extends BaseDataObject {
     protected void writeState(ObjectOutputStream out) throws IOException {
         super.writeState(out);
         out.writeObject(this.actualEndDate);
+        out.writeBoolean(this.cannotComplete);
         out.writeBoolean(this.completed);
         out.writeBoolean(this.dropped);
         out.writeObject(this.estEndDate);
@@ -241,7 +248,6 @@ public abstract class _Task extends BaseDataObject {
         out.writeObject(this.startDate);
         out.writeObject(this.timeTaken);
         out.writeBoolean(this.willNotComplete);
-        out.writeBoolean(this.cannotComplete);
         out.writeObject(this.user);
     }
 
@@ -249,6 +255,7 @@ public abstract class _Task extends BaseDataObject {
     protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
         super.readState(in);
         this.actualEndDate = (LocalDate)in.readObject();
+        this.cannotComplete = in.readBoolean();
         this.completed = in.readBoolean();
         this.dropped = in.readBoolean();
         this.estEndDate = (Date)in.readObject();
@@ -256,7 +263,6 @@ public abstract class _Task extends BaseDataObject {
         this.startDate = (Date)in.readObject();
         this.timeTaken = (Integer)in.readObject();
         this.willNotComplete = in.readBoolean();
-        this.cannotComplete = in.readBoolean();
         this.user = in.readObject();
     }
 

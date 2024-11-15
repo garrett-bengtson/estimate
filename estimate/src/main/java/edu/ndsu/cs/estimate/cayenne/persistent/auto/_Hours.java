@@ -6,8 +6,11 @@ import java.io.ObjectOutputStream;
 import java.util.Date;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.EntityProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.NumericProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.Task;
 
@@ -19,14 +22,14 @@ import edu.ndsu.cs.estimate.cayenne.persistent.Task;
  */
 public abstract class _Hours extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> HOURS_PK_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("hoursPK"), Integer.class);
+    public static final NumericIdProperty<Integer> HOURS_PK_PK_PROPERTY = PropertyFactory.createNumericId("hoursPK", "Hours", Integer.class);
     public static final String HOURS_PK_PK_COLUMN = "hoursPK";
 
-    public static final Property<Integer> HOURS_LOGGED = Property.create("hoursLogged", Integer.class);
-    public static final Property<Date> TIME_STAMP = Property.create("timeStamp", Date.class);
-    public static final Property<Task> TASKS = Property.create("tasks", Task.class);
+    public static final NumericProperty<Integer> HOURS_LOGGED = PropertyFactory.createNumeric("hoursLogged", Integer.class);
+    public static final DateProperty<Date> TIME_STAMP = PropertyFactory.createDate("timeStamp", Date.class);
+    public static final EntityProperty<Task> TASKS = PropertyFactory.createEntity("tasks", Task.class);
 
     protected int hoursLogged;
     protected Date timeStamp;

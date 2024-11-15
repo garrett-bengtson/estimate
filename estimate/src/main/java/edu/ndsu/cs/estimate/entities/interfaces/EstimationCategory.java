@@ -19,7 +19,7 @@ public interface EstimationCategory {
 	public void setObjectContext(ObjectContext obj);
     public ObjectContext getObjectContext();
 	
-	public List<CallibrationExercise> getExersises();
+	public List<CallibrationExercise> getExercises();
 	
 	public void addToSuggestions(EstimationSuggestion obj);
 	public void removeFromSuggestions(EstimationSuggestion obj);

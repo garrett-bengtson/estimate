@@ -2,6 +2,7 @@
     <link rel="stylesheet" type="text/css" href="/css/events.css"></link>
     <t:security.authenticated>
         <div class="container my-3">
+        	<t:alerts t:id="alerts" />
             <div class="row align-items-center">
                 <div class="col-12 col-lg-2 order-lg-1 order-1 mb-2 mb-lg-0 text-center text-lg-start enav">
                     <h3>Events</h3>
