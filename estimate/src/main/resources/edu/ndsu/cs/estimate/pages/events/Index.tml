@@ -66,7 +66,7 @@
             </div>
         </t:unless>
         <div class="container">
-            <p>Looking for the original <a href="/estimation">estimation calibration</a>?</p>
+            <p>Looking for the original <a href="/estimation" title="View exercise predictions">estimation calibration</a>?</p>
         </div>
         <script src="/js/eventFormFix.js"></script>
         <script src="/js/dateRange.js"></script>
