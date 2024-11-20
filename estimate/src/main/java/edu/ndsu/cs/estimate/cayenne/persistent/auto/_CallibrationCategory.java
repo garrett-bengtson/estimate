@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.ListProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationExercise;
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationSuggestion;
@@ -20,15 +22,15 @@ import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationSuggestion;
  */
 public abstract class _CallibrationCategory extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> CATEGORY_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("CategoryID"), Integer.class);
+    public static final NumericIdProperty<Integer> CATEGORY_ID_PK_PROPERTY = PropertyFactory.createNumericId("CategoryID", "CallibrationCategory", Integer.class);
     public static final String CATEGORY_ID_PK_COLUMN = "CategoryID";
 
-    public static final Property<String> DESCRIPTION = Property.create("description", String.class);
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<List<CallibrationExercise>> EXERCISES = Property.create("exercises", List.class);
-    public static final Property<List<CallibrationSuggestion>> SUGGESTIONS = Property.create("suggestions", List.class);
+    public static final StringProperty<String> DESCRIPTION = PropertyFactory.createString("description", String.class);
+    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
+    public static final ListProperty<CallibrationExercise> EXERCISES = PropertyFactory.createList("exercises", CallibrationExercise.class);
+    public static final ListProperty<CallibrationSuggestion> SUGGESTIONS = PropertyFactory.createList("suggestions", CallibrationSuggestion.class);
 
     protected String description;
     protected String name;

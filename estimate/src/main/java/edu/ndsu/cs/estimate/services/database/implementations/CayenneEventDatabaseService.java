@@ -9,6 +9,8 @@ import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.SelectById;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.DateProperty;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,9 +49,9 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     public List<Event> findEventsInRange(Date start, Date end, String category) {
         ObjectContext context = cayenneService.newContext();
 
-        Property<Date> eventDateProperty = Event.EVENT_DATE;
-        Property<String> eventNameProperty = Event.NAME;
-        Property<String> eventCategoryProperty = Event.CATEGORY;
+        DateProperty<Date> eventDateProperty = Event.EVENT_DATE;
+        StringProperty<String> eventNameProperty = Event.NAME;
+        StringProperty<String> eventCategoryProperty = Event.CATEGORY;
         
         ObjectSelect<Event> query = ObjectSelect.query(Event.class)
             .where(eventDateProperty.between(start, end))
@@ -65,7 +67,7 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     @Override
     public List<String> findAllCategoriesInRange(Date start, Date end) {
         ObjectContext context = cayenneService.newContext();
-        Property<Date> eventDateProperty = Event.EVENT_DATE;
+        DateProperty<Date> eventDateProperty = Event.EVENT_DATE;
         
         List<Event> events = ObjectSelect.query(Event.class)
                 .where(eventDateProperty.between(start, end))
@@ -132,13 +134,10 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
         return event;
     }
        
-    
-   
     @Override
     public void changeApprovalStatus(int eventId) {
         ObjectContext context = cayenneService.newContext();
         Event event = SelectById.query(Event.class, eventId).selectOne(context);
-        //System.out.println("Event status: " + event.getId() + " " + event.isApproved());
         if (event.isApproved()) {
             event.setApproved(false);
         }

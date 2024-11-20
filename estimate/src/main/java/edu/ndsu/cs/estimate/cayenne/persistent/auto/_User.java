@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.ExpressionFactory;
-import org.apache.cayenne.exp.Property;
+import org.apache.cayenne.exp.property.ListProperty;
+import org.apache.cayenne.exp.property.NumericIdProperty;
+import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.property.StringProperty;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationEstimate;
 import edu.ndsu.cs.estimate.cayenne.persistent.Role;
@@ -21,17 +23,17 @@ import edu.ndsu.cs.estimate.cayenne.persistent.Task;
  */
 public abstract class _User extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
 
-    public static final Property<Integer> USER_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("UserId"), Integer.class);
+    public static final NumericIdProperty<Integer> USER_ID_PK_PROPERTY = PropertyFactory.createNumericId("UserId", "User", Integer.class);
     public static final String USER_ID_PK_COLUMN = "UserId";
 
-    public static final Property<String> PASSWORD_HASH = Property.create("passwordHash", String.class);
-    public static final Property<String> PASSWORD_SALT = Property.create("passwordSalt", String.class);
-    public static final Property<String> USER_NAME = Property.create("userName", String.class);
-    public static final Property<List<CallibrationEstimate>> ESTIMATES = Property.create("estimates", List.class);
-    public static final Property<List<Role>> ROLES = Property.create("roles", List.class);
-    public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
+    public static final StringProperty<String> PASSWORD_HASH = PropertyFactory.createString("passwordHash", String.class);
+    public static final StringProperty<String> PASSWORD_SALT = PropertyFactory.createString("passwordSalt", String.class);
+    public static final StringProperty<String> USER_NAME = PropertyFactory.createString("userName", String.class);
+    public static final ListProperty<CallibrationEstimate> ESTIMATES = PropertyFactory.createList("estimates", CallibrationEstimate.class);
+    public static final ListProperty<Role> ROLES = PropertyFactory.createList("roles", Role.class);
+    public static final ListProperty<Task> TASKS = PropertyFactory.createList("tasks", Task.class);
 
     protected String passwordHash;
     protected String passwordSalt;

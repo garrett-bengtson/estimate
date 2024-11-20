@@ -77,7 +77,6 @@ public class Index {
     @Persist
     @Property
     private String hiddenCategory;
-
     
     @Inject
     private UserAccountDatabaseService userAccountDatabaseService;
@@ -86,27 +85,24 @@ public class Index {
     private SecurityService securityService;
 
     void setupRender() {
-    	
     	//Check if user is logged in
     	if(securityService.getSubject().getPrincipal() != null) {
     		String principal = securityService.getSubject().getPrincipal().toString();
         	userAccount = userAccountDatabaseService.getUserAccount(principal);
-    	}
-    	  	
+    	}	
         getEvents();
         noEvents = (events == null) || events.isEmpty();
-        
-        
     }
     
-   
-    
-  //Change event approval from true to false and vice versa
+    //Change event approval from true to false and vice versa
     @OnEvent(component = "changeApprovalStatus", value = "action")
     void changeApprovalStatus(int eventid) {
     	db.changeApprovalStatus(eventid);
     }
     
+    //Check if the event is approved or if the user is an admin.
+    //if either are true, return true. This will cause the event to
+    //display.
     public Boolean isPublicEvent(Boolean currentEventApproval) {
     	if(currentEventApproval || userAccount.isAdmin()) {
     		return true;

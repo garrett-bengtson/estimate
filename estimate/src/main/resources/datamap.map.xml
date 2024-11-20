@@ -38,8 +38,9 @@
 		<db-attribute name="result" type="INTEGER"/>
 	</db-entity>
 	<db-entity name="ExerciseCategories">
-		<db-attribute name="CategoryID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
-		<db-attribute name="ExerciseID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="CategoryID" type="INTEGER" isMandatory="true"/>
+		<db-attribute name="ExerciseID" type="INTEGER" isMandatory="true"/>
+		<db-attribute name="PK" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 	</db-entity>
 	<db-entity name="Hours">
 		<db-attribute name="hoursLogged" type="INTEGER" isMandatory="true"/>
@@ -52,8 +53,9 @@
 		<db-attribute name="name" type="VARCHAR" length="20"/>
 	</db-entity>
 	<db-entity name="SuggestionCategories">
-		<db-attribute name="CategoryID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
-		<db-attribute name="SuggestionID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="CategoryID" type="INTEGER" isMandatory="true"/>
+		<db-attribute name="PK" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="SuggestionID" type="INTEGER" isMandatory="true"/>
 	</db-entity>
 	<db-entity name="Tasks">
 		<db-attribute name="ActualEndDate" type="DATE"/>
@@ -154,10 +156,10 @@
 	<db-relationship name="Categories" source="CallibrationSuggestions" target="SuggestionCategories" toMany="true">
 		<db-attribute-pair source="SuggestionID" target="SuggestionID"/>
 	</db-relationship>
-	<db-relationship name="categories" source="ExerciseCategories" target="CallibrationCategory" toDependentPK="true">
+	<db-relationship name="categories" source="ExerciseCategories" target="CallibrationCategory">
 		<db-attribute-pair source="CategoryID" target="CategoryID"/>
 	</db-relationship>
-	<db-relationship name="exercises" source="ExerciseCategories" target="CallibrationExercises" toDependentPK="true">
+	<db-relationship name="exercises" source="ExerciseCategories" target="CallibrationExercises">
 		<db-attribute-pair source="ExerciseID" target="ExerciseID"/>
 	</db-relationship>
 	<db-relationship name="tasks" source="Hours" target="Tasks">
@@ -166,10 +168,10 @@
 	<db-relationship name="Users" source="Roles" target="UserAccounts_Roles_JoinTable" toMany="true">
 		<db-attribute-pair source="PK" target="RolesPK"/>
 	</db-relationship>
-	<db-relationship name="categories" source="SuggestionCategories" target="CallibrationCategory" toDependentPK="true">
+	<db-relationship name="categories" source="SuggestionCategories" target="CallibrationCategory">
 		<db-attribute-pair source="CategoryID" target="CategoryID"/>
 	</db-relationship>
-	<db-relationship name="suggestions" source="SuggestionCategories" target="CallibrationSuggestions" toDependentPK="true">
+	<db-relationship name="suggestions" source="SuggestionCategories" target="CallibrationSuggestions">
 		<db-attribute-pair source="SuggestionID" target="SuggestionID"/>
 	</db-relationship>
 	<db-relationship name="hours" source="Tasks" target="Hours" toMany="true">
@@ -220,10 +222,8 @@
 		<usePrimitives>true</usePrimitives>
 	</dbImport>
 	<cgen xmlns="http://cayenne.apache.org/schema/10/cgen">
-		<destDir>..\java</destDir>
+		<destDir>../java</destDir>
 		<mode>all</mode>
-		<template>templates/v4_1/subclass.vm</template>
-		<superTemplate>templates/v4_1/superclass.vm</superTemplate>
 		<template>templates/v4_1/subclass.vm</template>
 		<superTemplate>templates/v4_1/superclass.vm</superTemplate>
 		<embeddableTemplate>templates/v4_1/embeddable-subclass.vm</embeddableTemplate>
