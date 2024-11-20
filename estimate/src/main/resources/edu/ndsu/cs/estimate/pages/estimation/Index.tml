@@ -7,8 +7,9 @@
 		
 		<t:grid source="categories" row="category" include="name, description" add="actions">
 			<p:actionsCell>
-				<t:pagelink page="estimation/ViewExercises" context="category.pk"> View Exercises</t:pagelink> | 
-				<t:pagelink page="estimation/SuggestNewEvent" context="category.pk"> Suggest new event</t:pagelink>
+				<t:pagelink page="estimation/ViewExercises" context="category.pk"  title="Go to prediction exercises for this category">  View Exercises</t:pagelink> | 
+				<t:pagelink page="estimation/SuggestNewEvent" context="category.pk" title= "Create a new prediction exercise for this category"> Suggest new event</t:pagelink>
+			t:pagelink>
 			</p:actionsCell> 
 		</t:grid>
 	</t:security.authenticated>
