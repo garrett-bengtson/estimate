@@ -28,6 +28,7 @@
 		<db-attribute name="SuggestionID" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
 	</db-entity>
 	<db-entity name="Events">
+		<db-attribute name="approved" type="BOOLEAN" isMandatory="true"/>
 		<db-attribute name="category" type="VARCHAR" isMandatory="true" length="25"/>
 		<db-attribute name="createdDate" type="DATE" isMandatory="true"/>
 		<db-attribute name="description" type="VARCHAR" isMandatory="true" length="500"/>
@@ -100,6 +101,7 @@
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
 	</obj-entity>
 	<obj-entity name="Event" className="edu.ndsu.cs.estimate.cayenne.persistent.Event" dbEntityName="Events">
+		<obj-attribute name="approved" type="boolean" db-attribute-path="approved"/>
 		<obj-attribute name="category" type="java.lang.String" db-attribute-path="category"/>
 		<obj-attribute name="createdDate" type="java.util.Date" db-attribute-path="createdDate"/>
 		<obj-attribute name="description" type="java.lang.String" db-attribute-path="description"/>
@@ -218,8 +220,10 @@
 		<usePrimitives>true</usePrimitives>
 	</dbImport>
 	<cgen xmlns="http://cayenne.apache.org/schema/10/cgen">
-		<destDir>../java</destDir>
+		<destDir>..\java</destDir>
 		<mode>all</mode>
+		<template>templates/v4_1/subclass.vm</template>
+		<superTemplate>templates/v4_1/superclass.vm</superTemplate>
 		<template>templates/v4_1/subclass.vm</template>
 		<superTemplate>templates/v4_1/superclass.vm</superTemplate>
 		<embeddableTemplate>templates/v4_1/embeddable-subclass.vm</embeddableTemplate>

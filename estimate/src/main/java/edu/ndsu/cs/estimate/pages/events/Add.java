@@ -49,6 +49,9 @@ public class Add {
 
     @Property
     private List<String> uniqueCategories;
+    
+    @Property
+    private Boolean approved;
 
     @Component
     private Form eventForm;
@@ -70,6 +73,9 @@ public class Add {
     }
     
     void onValidateFromEventForm() {
+    	
+    	approved = false;
+    	
         if (name == null) {
             eventForm.recordError("Name must be included in event creation.");
         }
@@ -88,7 +94,7 @@ public class Add {
                 eventForm.recordError("Invalid date format for event date. Please use MM/dd/yyyy.");
             }
             else {
-                Event event = eventDatabaseService.createEvent(name, description, category, eventDate);
+                Event event = eventDatabaseService.createEvent(name, description, category, eventDate, approved);
                 event.setEventDate(eventDate);
             }
         }

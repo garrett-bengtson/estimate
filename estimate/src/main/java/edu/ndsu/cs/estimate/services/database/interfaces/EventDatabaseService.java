@@ -10,9 +10,10 @@ public interface EventDatabaseService {
     Event findEventById(int eventId);
     List<Event> findEventsInRange(Date start, Date end, String category);
     List<String> findAllCategoriesInRange(Date start, Date end);
-    Event createEvent(String name, String description, String category, Date eventDate);
-    Event updateEvent(int eventId, String name, String description, String category, Date eventDate);
+    Event createEvent(String name, String description, String category, Date eventDate, Boolean approved);
+    Event updateEvent(int eventId, String name, String description, String category, Date eventDate, Boolean approved);
     void deleteEvent(int eventId);
     Event updateEventResult(int eventId, Integer result);
     List<String> findAllCategories();
+    void changeApprovalStatus(int eventId);
 }

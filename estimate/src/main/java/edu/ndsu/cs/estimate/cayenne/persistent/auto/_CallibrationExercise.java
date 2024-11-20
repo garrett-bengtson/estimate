@@ -6,11 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.property.BaseProperty;
-import org.apache.cayenne.exp.property.ListProperty;
-import org.apache.cayenne.exp.property.NumericIdProperty;
-import org.apache.cayenne.exp.property.PropertyFactory;
-import org.apache.cayenne.exp.property.StringProperty;
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.Property;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationCategory;
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationEstimate;
@@ -23,17 +20,17 @@ import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationEstimate;
  */
 public abstract class _CallibrationExercise extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; 
 
-    public static final NumericIdProperty<Integer> EXERCISE_ID_PK_PROPERTY = PropertyFactory.createNumericId("ExerciseID", "CallibrationExercise", Integer.class);
+    public static final Property<Integer> EXERCISE_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("ExerciseID"), Integer.class);
     public static final String EXERCISE_ID_PK_COLUMN = "ExerciseID";
 
-    public static final StringProperty<String> DESCRIPTION = PropertyFactory.createString("description", String.class);
-    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
-    public static final BaseProperty<Boolean> OUTCOME = PropertyFactory.createBase("outcome", Boolean.class);
-    public static final BaseProperty<Boolean> OUTCOME_REPORTED = PropertyFactory.createBase("outcomeReported", Boolean.class);
-    public static final ListProperty<CallibrationCategory> CATEGORIES = PropertyFactory.createList("categories", CallibrationCategory.class);
-    public static final ListProperty<CallibrationEstimate> ESTIMATES = PropertyFactory.createList("estimates", CallibrationEstimate.class);
+    public static final Property<String> DESCRIPTION = Property.create("description", String.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<Boolean> OUTCOME = Property.create("outcome", Boolean.class);
+    public static final Property<Boolean> OUTCOME_REPORTED = Property.create("outcomeReported", Boolean.class);
+    public static final Property<List<CallibrationCategory>> CATEGORIES = Property.create("categories", List.class);
+    public static final Property<List<CallibrationEstimate>> ESTIMATES = Property.create("estimates", List.class);
 
     protected String description;
     protected String name;

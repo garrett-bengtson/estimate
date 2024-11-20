@@ -6,10 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.property.ListProperty;
-import org.apache.cayenne.exp.property.NumericIdProperty;
-import org.apache.cayenne.exp.property.PropertyFactory;
-import org.apache.cayenne.exp.property.StringProperty;
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.Property;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
 
@@ -21,13 +19,13 @@ import edu.ndsu.cs.estimate.cayenne.persistent.User;
  */
 public abstract class _Role extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; 
 
-    public static final NumericIdProperty<Integer> PK_PK_PROPERTY = PropertyFactory.createNumericId("PK", "Role", Integer.class);
+    public static final Property<Integer> PK_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("PK"), Integer.class);
     public static final String PK_PK_COLUMN = "PK";
 
-    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
-    public static final ListProperty<User> USERS = PropertyFactory.createList("users", User.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<List<User>> USERS = Property.create("users", List.class);
 
     protected String name;
 

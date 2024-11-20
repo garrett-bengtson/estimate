@@ -49,6 +49,9 @@ public class Edit {
     @Property
     private Event event;
     
+    @Property
+    private Boolean approved;
+    
     @Component
     private Form eventForm;
 
@@ -123,7 +126,7 @@ public class Edit {
     	    	if (category == null || category.length() == 0) {
     	    		category = event.getCategory();
     	    	}
-                eventDatabaseService.updateEvent(eventId, name, description, category, eventDate);
+                eventDatabaseService.updateEvent(eventId, name, description, category, eventDate, approved);
 
     		}
     	}

@@ -5,10 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.property.EntityProperty;
-import org.apache.cayenne.exp.property.NumericIdProperty;
-import org.apache.cayenne.exp.property.NumericProperty;
-import org.apache.cayenne.exp.property.PropertyFactory;
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.Property;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.CallibrationExercise;
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
@@ -21,14 +19,14 @@ import edu.ndsu.cs.estimate.cayenne.persistent.User;
  */
 public abstract class _CallibrationEstimate extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; 
 
-    public static final NumericIdProperty<Integer> ESTIMATE_ID_PK_PROPERTY = PropertyFactory.createNumericId("EstimateID", "CallibrationEstimate", Integer.class);
+    public static final Property<Integer> ESTIMATE_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("EstimateID"), Integer.class);
     public static final String ESTIMATE_ID_PK_COLUMN = "EstimateID";
 
-    public static final NumericProperty<Integer> PERCENT_PREDICTION = PropertyFactory.createNumeric("percentPrediction", Integer.class);
-    public static final EntityProperty<CallibrationExercise> EXERCISE = PropertyFactory.createEntity("exercise", CallibrationExercise.class);
-    public static final EntityProperty<User> USER = PropertyFactory.createEntity("user", User.class);
+    public static final Property<Integer> PERCENT_PREDICTION = Property.create("percentPrediction", Integer.class);
+    public static final Property<CallibrationExercise> EXERCISE = Property.create("exercise", CallibrationExercise.class);
+    public static final Property<User> USER = Property.create("user", User.class);
 
     protected int percentPrediction;
 
