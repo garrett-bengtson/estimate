@@ -1,13 +1,16 @@
 package edu.ndsu.cs.estimate.pages.events;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.Event;
+import org.tynamo.security.services.SecurityService;
+import edu.ndsu.cs.estimate.entities.interfaces.UserAccount;
 import edu.ndsu.cs.estimate.services.database.interfaces.EventDatabaseService;
-
+import edu.ndsu.cs.estimate.services.database.interfaces.UserAccountDatabaseService;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.Select;
 import org.apache.tapestry5.corelib.components.TextField;
+import org.apache.tapestry5.http.Link;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.internal.SelectModelImpl;
 import org.apache.tapestry5.EventContext;
@@ -19,6 +22,7 @@ import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +37,10 @@ public class Index {
 
     @Inject
     private AlertManager alertManager;
+    
+    @Property
+    @Persist
+    private UserAccount userAccount;
     
     @Property
     private List<Event> events;
@@ -70,10 +78,42 @@ public class Index {
     @Property
     private String hiddenCategory;
 
+    
+    @Inject
+    private UserAccountDatabaseService userAccountDatabaseService;
+
+    @Inject
+    private SecurityService securityService;
 
     void setupRender() {
+    	
+    	//Check if user is logged in
+    	if(securityService.getSubject().getPrincipal() != null) {
+    		String principal = securityService.getSubject().getPrincipal().toString();
+        	userAccount = userAccountDatabaseService.getUserAccount(principal);
+    	}
+    	  	
         getEvents();
         noEvents = (events == null) || events.isEmpty();
+        
+        
+    }
+    
+   
+    
+  //Change event approval from true to false and vice versa
+    @OnEvent(component = "changeApprovalStatus", value = "action")
+    void changeApprovalStatus(int eventid) {
+    	db.changeApprovalStatus(eventid);
+    }
+    
+    public Boolean isPublicEvent(Boolean currentEventApproval) {
+    	if(currentEventApproval || userAccount.isAdmin()) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
 
     private void getEvents() {

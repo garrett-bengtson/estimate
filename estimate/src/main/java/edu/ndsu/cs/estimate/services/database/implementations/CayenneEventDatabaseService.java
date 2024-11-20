@@ -7,9 +7,8 @@ import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ColumnSelect;
 import org.apache.cayenne.query.ObjectSelect;
 import org.apache.cayenne.query.SelectById;
+import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.cayenne.exp.Property;
-import org.apache.cayenne.exp.property.DateProperty;
-import org.apache.cayenne.exp.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,9 +47,9 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     public List<Event> findEventsInRange(Date start, Date end, String category) {
         ObjectContext context = cayenneService.newContext();
 
-        DateProperty<Date> eventDateProperty = Event.EVENT_DATE;
-        StringProperty<String> eventNameProperty = Event.NAME;
-        StringProperty<String> eventCategoryProperty = Event.CATEGORY;
+        Property<Date> eventDateProperty = Event.EVENT_DATE;
+        Property<String> eventNameProperty = Event.NAME;
+        Property<String> eventCategoryProperty = Event.CATEGORY;
         
         ObjectSelect<Event> query = ObjectSelect.query(Event.class)
             .where(eventDateProperty.between(start, end))
@@ -66,7 +65,7 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     @Override
     public List<String> findAllCategoriesInRange(Date start, Date end) {
         ObjectContext context = cayenneService.newContext();
-        DateProperty<Date> eventDateProperty = Event.EVENT_DATE;
+        Property<Date> eventDateProperty = Event.EVENT_DATE;
         
         List<Event> events = ObjectSelect.query(Event.class)
                 .where(eventDateProperty.between(start, end))
@@ -86,7 +85,7 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
 
 
     @Override
-    public Event createEvent(String name, String description, String category, Date eventDate) {
+    public Event createEvent(String name, String description, String category, Date eventDate, Boolean approved) {
         ObjectContext context = cayenneService.newContext();
         Event event = context.newObject(Event.class);
         event.setName(name);
@@ -99,7 +98,7 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
     }
 
     @Override
-    public Event updateEvent(int eventId, String name, String description, String category, Date eventDate) {
+    public Event updateEvent(int eventId, String name, String description, String category, Date eventDate, Boolean approved) {
         ObjectContext context = cayenneService.newContext();
         Event event = SelectById.query(Event.class, eventId).selectOne(context);
         if (event != null) {
@@ -131,5 +130,21 @@ public class CayenneEventDatabaseService implements EventDatabaseService {
             context.commitChanges();
         }
         return event;
+    }
+       
+    
+   
+    @Override
+    public void changeApprovalStatus(int eventId) {
+        ObjectContext context = cayenneService.newContext();
+        Event event = SelectById.query(Event.class, eventId).selectOne(context);
+        //System.out.println("Event status: " + event.getId() + " " + event.isApproved());
+        if (event.isApproved()) {
+            event.setApproved(false);
+        }
+        else {
+        	event.setApproved(true);
+        }
+        context.commitChanges();
     }
 }

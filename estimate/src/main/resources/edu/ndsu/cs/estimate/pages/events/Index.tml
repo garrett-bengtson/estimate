@@ -23,7 +23,9 @@
                 </div>
                 <div class="col-12 col-lg-3 order-lg-3 order-3 mb-2 mb-lg-0 text-center text-lg-end">
                     <t:pagelink class="btn btn-success create-task" page="events/add">Suggest New Event</t:pagelink>
-                    <t:pagelink class="btn btn-primary create-category" page="events/NewCategory">Create New Category</t:pagelink>
+                    <t:if test="userAccount.isAdmin()">
+                    	<t:pagelink class="btn btn-primary create-category" page="events/NewCategory">Create New Category</t:pagelink>
+                    </t:if>
                 </div>
             </div>
         </div>
@@ -45,21 +47,35 @@
                             <th class="col-md-2">Category</th>
                             <th class="col-md-2">Name</th>
                             <th class="col-md-3">Description</th>
+                            <th class="col-md-2">Approval</th>
                             <th class="col-md-2">Actions</th>
                         </tr>
                     </thead>                    
                     <tbody>
                         <t:loop source="events" value="currentEvent">
-                            <tr>
-                                <td>${currentEvent.formattedEventDate}</td>
-                                <td>${currentEvent.category}</td>
-                                <td>${currentEvent.name}</td>
-                                <td>${currentEvent.description}</td>
-                                <td>
-                                    <t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
-                                    <t:actionlink t:id="delete" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
-                                </td>
-                            </tr>
+                            <t:if test="isPublicEvent(currentEvent.approved)">
+                            	<tr>
+                                	<td>${currentEvent.formattedEventDate}</td>
+                                	<td>${currentEvent.category}</td>
+                                	<td>${currentEvent.name}</td>
+                                	<td>${currentEvent.description}</td>
+                                	<td>${currentEvent.approved}</td>
+                                	<td>
+                                    	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
+                                    	<t:actionlink t:id="delete" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
+                                    	<t:if test="userAccount.isAdmin()">                                   		
+                                    			<t:actionlink t:id="changeApprovalStatus" context="${currentEvent.id}" class="btn btn-sm btn-primary">
+                                    				<t:if test="!currentEvent.approved">
+                                    					Approve
+                                    				</t:if>
+                                    				<t:if test="currentEvent.approved">
+                                    					Disapprove
+                                    				</t:if>
+                                    			</t:actionlink>                                   		
+                                    	</t:if>
+                                	</td>
+                            	</tr>
+                            </t:if>
                         </t:loop>
                     </tbody>              
                 </table>

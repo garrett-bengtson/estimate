@@ -7,13 +7,8 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import org.apache.cayenne.BaseDataObject;
-import org.apache.cayenne.exp.property.BaseProperty;
-import org.apache.cayenne.exp.property.DateProperty;
-import org.apache.cayenne.exp.property.EntityProperty;
-import org.apache.cayenne.exp.property.NumericIdProperty;
-import org.apache.cayenne.exp.property.NumericProperty;
-import org.apache.cayenne.exp.property.PropertyFactory;
-import org.apache.cayenne.exp.property.StringProperty;
+import org.apache.cayenne.exp.ExpressionFactory;
+import org.apache.cayenne.exp.Property;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
 
@@ -25,21 +20,21 @@ import edu.ndsu.cs.estimate.cayenne.persistent.User;
  */
 public abstract class _Task extends BaseDataObject {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; 
 
-    public static final NumericIdProperty<Integer> TASK_ID_PK_PROPERTY = PropertyFactory.createNumericId("TaskId", "Task", Integer.class);
+    public static final Property<Integer> TASK_ID_PK_PROPERTY = Property.create(ExpressionFactory.dbPathExp("TaskId"), Integer.class);
     public static final String TASK_ID_PK_COLUMN = "TaskId";
 
-    public static final DateProperty<LocalDate> ACTUAL_END_DATE = PropertyFactory.createDate("actualEndDate", LocalDate.class);
-    public static final BaseProperty<Boolean> CANNOT_COMPLETE = PropertyFactory.createBase("cannotComplete", Boolean.class);
-    public static final BaseProperty<Boolean> COMPLETED = PropertyFactory.createBase("completed", Boolean.class);
-    public static final BaseProperty<Boolean> DROPPED = PropertyFactory.createBase("dropped", Boolean.class);
-    public static final DateProperty<Date> EST_END_DATE = PropertyFactory.createDate("estEndDate", Date.class);
-    public static final StringProperty<String> NAME = PropertyFactory.createString("name", String.class);
-    public static final DateProperty<Date> START_DATE = PropertyFactory.createDate("startDate", Date.class);
-    public static final NumericProperty<Integer> TIME_TAKEN = PropertyFactory.createNumeric("timeTaken", Integer.class);
-    public static final BaseProperty<Boolean> WILL_NOT_COMPLETE = PropertyFactory.createBase("willNotComplete", Boolean.class);
-    public static final EntityProperty<User> USER = PropertyFactory.createEntity("user", User.class);
+    public static final Property<LocalDate> ACTUAL_END_DATE = Property.create("actualEndDate", LocalDate.class);
+    public static final Property<Boolean> CANNOT_COMPLETE = Property.create("cannotComplete", Boolean.class);
+    public static final Property<Boolean> COMPLETED = Property.create("completed", Boolean.class);
+    public static final Property<Boolean> DROPPED = Property.create("dropped", Boolean.class);
+    public static final Property<Date> EST_END_DATE = Property.create("estEndDate", Date.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<Date> START_DATE = Property.create("startDate", Date.class);
+    public static final Property<Integer> TIME_TAKEN = Property.create("timeTaken", Integer.class);
+    public static final Property<Boolean> WILL_NOT_COMPLETE = Property.create("willNotComplete", Boolean.class);
+    public static final Property<User> USER = Property.create("user", User.class);
 
     protected LocalDate actualEndDate;
     protected boolean cannotComplete;
