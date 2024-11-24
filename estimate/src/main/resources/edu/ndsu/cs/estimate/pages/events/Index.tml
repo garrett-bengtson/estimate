@@ -39,7 +39,12 @@
             </div>
         </t:if>
         <t:unless test="noEvents">
+        	
+        	<t:unless test="noEventsWithoutResults">
             <div class="container mt-4">
+            	<div class="col-md-12">
+           			<h3 class="text-start">Uncompleted Events</h3>
+       			</div>
                 <table class="table table-striped mt-4">
                     <thead>
                         <tr>
@@ -47,24 +52,26 @@
                             <th class="col-md-2">Category</th>
                             <th class="col-md-2">Name</th>
                             <th class="col-md-3">Description</th>
+                            <th class="col-md-2">Result</th>
                             <th class="col-md-2">Approval</th>
                             <th class="col-md-2">Actions</th>
                         </tr>
                     </thead>                    
                     <tbody>
-                        <t:loop source="events" value="currentEvent">
+                        <t:loop source="eventsWithoutResults" value="currentEvent">
                             <t:if test="isPublicEvent(currentEvent.approved)">
                             	<tr>
                                 	<td>${currentEvent.formattedEventDate}</td>
                                 	<td>${currentEvent.category}</td>
                                 	<td>${currentEvent.name}</td>
                                 	<td>${currentEvent.description}</td>
+                                	<td>${currentEvent.result}</td>
                                 	<td>${currentEvent.approved}</td>
                                 	<td>
                                     	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
-                                    	<t:actionlink t:id="delete" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
+                                    	<t:actionlink t:id="deleteUncompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
                                     	<t:if test="userAccount.isAdmin()">                                   		
-                                    			<t:actionlink t:id="changeApprovalStatus" context="${currentEvent.id}" class="btn btn-sm btn-primary">
+                                    			<t:actionlink t:id="changeApprovalStatusUncompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
                                     				<t:if test="!currentEvent.approved">
                                     					Approve
                                     				</t:if>
@@ -80,6 +87,57 @@
                     </tbody>              
                 </table>
             </div>
+            </t:unless>
+            
+            <t:unless test="noEventsWithResults">
+            <div class="container mt-4">
+            	<div class="col-md-12">
+           			<h3 class="text-start">Completed Events</h3>
+       			</div>
+                <table class="table table-striped mt-4">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">Event Date</th>
+                            <th class="col-md-2">Category</th>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-3">Description</th>
+                            <th class="col-md-2">Result</th>
+                            <th class="col-md-2">Approval</th>
+                            <th class="col-md-2">Actions</th>
+                        </tr>
+                    </thead>                    
+                    <tbody>
+                        <t:loop source="eventsWithResults" value="currentEvent">
+                            <t:if test="isPublicEvent(currentEvent.approved)">
+                            	<tr>
+                                	<td>${currentEvent.formattedEventDate}</td>
+                                	<td>${currentEvent.category}</td>
+                                	<td>${currentEvent.name}</td>
+                                	<td>${currentEvent.description}</td>
+                                	<td>${currentEvent.result}</td>
+                                	<td>${currentEvent.approved}</td>
+                                	<td>
+                                    	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
+                                    	<t:actionlink t:id="deleteCompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
+                                    	<t:if test="userAccount.isAdmin()">                                   		
+                                    			<t:actionlink t:id="changeApprovalStatusCompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
+                                    				<t:if test="!currentEvent.approved">
+                                    					Approve
+                                    				</t:if>
+                                    				<t:if test="currentEvent.approved">
+                                    					Disapprove
+                                    				</t:if>
+                                    			</t:actionlink>                                   		
+                                    	</t:if>
+                                	</td>
+                            	</tr>
+                            </t:if>
+                        </t:loop>
+                    </tbody>              
+                </table>
+            </div>
+            </t:unless>
+            
         </t:unless>
         <div class="container">
             <p>Looking for the original <a href="/estimation" title="View exercise predictions">estimation calibration</a>?</p>
