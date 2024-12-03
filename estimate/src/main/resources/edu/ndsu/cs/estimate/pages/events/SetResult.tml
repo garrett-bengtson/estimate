@@ -9,7 +9,7 @@
 
                     <div class="mb-3">
                         <label for="resultSlider" class="form-label">Record Outcome (0% - 100%)</label>
-                        <input type="range" class="form-range form-control" min="0" max="100" id="resultSlider" t:id="resultSlider" t:value="result"/>
+                        <input type="range" class="form-range form-control" min="0" max="100" step="20" id="resultSlider" t:id="resultSlider" t:value="result"/>
                         <div>Current Value: <span id="resultValue">${result}</span></div>                                             
                     </div>                    
 

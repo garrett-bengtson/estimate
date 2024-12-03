@@ -47,6 +47,10 @@ public class Index {
     
     @Property
     private boolean noEvents;
+    @Property
+    private boolean noEventsWithResults;
+    @Property
+    private boolean noEventsWithoutResults;
     
     @Property
     private Event currentEvent;
@@ -84,6 +88,12 @@ public class Index {
     @Inject
     private SecurityService securityService;
 
+    @Property
+    private List<Event> eventsWithResults;
+
+    @Property
+    private List<Event> eventsWithoutResults;
+    
     void setupRender() {
     	//Check if user is logged in
     	if(securityService.getSubject().getPrincipal() != null) {
@@ -92,13 +102,32 @@ public class Index {
     	}	
         getEvents();
         noEvents = (events == null) || events.isEmpty();
+        
+        eventsWithResults = events.stream()
+                .filter(event -> event.getResult() != null)
+                .collect(Collectors.toList());
+        noEventsWithResults = (eventsWithResults == null) || eventsWithResults.isEmpty();
+
+        eventsWithoutResults = events.stream()
+                   .filter(event -> event.getResult() == null)
+                   .collect(Collectors.toList());
+        noEventsWithoutResults = (eventsWithoutResults == null) || eventsWithoutResults.isEmpty();
     }
     
     //Change event approval from true to false and vice versa
-    @OnEvent(component = "changeApprovalStatus", value = "action")
-    void changeApprovalStatus(int eventid) {
+    @OnEvent(component = "changeApprovalStatusUncompleted", value = "action")
+    void handleChangeApprovalStatusUncompleted(int eventid) {
     	db.changeApprovalStatus(eventid);
     }
+
+    @OnEvent(component = "changeApprovalStatusCompleted", value = "action")
+    void handleChangeApprovalStatusCompleted(int eventid) {
+    	db.changeApprovalStatus(eventid);
+    }
+    
+    
+    
+    
     
     //Check if the event is approved or if the user is an admin.
     //if either are true, return true. This will cause the event to
@@ -188,8 +217,14 @@ public class Index {
         category = hiddenCategory;
     }
     
-    @OnEvent(component = "delete", value = "action")
-    void onDeleteFromDelete(int eventId) {
-        db.deleteEvent(eventId);
+    @OnEvent(component = "deleteUncompleted", value = "action")
+    void handleDeleteUncompleted(int eventId) {
+    	db.deleteEvent(eventId);
     }
+
+    @OnEvent(component = "deleteCompleted", value = "action")
+    void handleDeleteCompleted(int eventId) {
+    	db.deleteEvent(eventId);
+    }
+    
 }
