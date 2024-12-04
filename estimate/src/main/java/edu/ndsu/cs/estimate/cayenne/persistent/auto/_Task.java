@@ -5,16 +5,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
 import org.apache.cayenne.exp.property.BaseProperty;
 import org.apache.cayenne.exp.property.DateProperty;
 import org.apache.cayenne.exp.property.EntityProperty;
+import org.apache.cayenne.exp.property.ListProperty;
 import org.apache.cayenne.exp.property.NumericIdProperty;
 import org.apache.cayenne.exp.property.NumericProperty;
 import org.apache.cayenne.exp.property.PropertyFactory;
 import org.apache.cayenne.exp.property.StringProperty;
 
+import edu.ndsu.cs.estimate.cayenne.persistent.Hours;
+import edu.ndsu.cs.estimate.cayenne.persistent.Report;
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
 
 /**
@@ -39,6 +43,8 @@ public abstract class _Task extends BaseDataObject {
     public static final DateProperty<Date> START_DATE = PropertyFactory.createDate("startDate", Date.class);
     public static final NumericProperty<Integer> TIME_TAKEN = PropertyFactory.createNumeric("timeTaken", Integer.class);
     public static final BaseProperty<Boolean> WILL_NOT_COMPLETE = PropertyFactory.createBase("willNotComplete", Boolean.class);
+    public static final ListProperty<Hours> HOURS = PropertyFactory.createList("hours", Hours.class);
+    public static final ListProperty<Report> REPORTS = PropertyFactory.createList("reports", Report.class);
     public static final EntityProperty<User> USER = PropertyFactory.createEntity("user", User.class);
 
     protected LocalDate actualEndDate;
@@ -51,6 +57,8 @@ public abstract class _Task extends BaseDataObject {
     protected Integer timeTaken;
     protected boolean willNotComplete;
 
+    protected Object hours;
+    protected Object reports;
     protected Object user;
 
     public void setActualEndDate(LocalDate actualEndDate) {
@@ -146,6 +154,32 @@ public abstract class _Task extends BaseDataObject {
         return this.willNotComplete;
     }
 
+    public void addToHours(Hours obj) {
+        addToManyTarget("hours", obj, true);
+    }
+
+    public void removeFromHours(Hours obj) {
+        removeToManyTarget("hours", obj, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Hours> getHours() {
+        return (List<Hours>)readProperty("hours");
+    }
+
+    public void addToReports(Report obj) {
+        addToManyTarget("reports", obj, true);
+    }
+
+    public void removeFromReports(Report obj) {
+        removeToManyTarget("reports", obj, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Report> getReports() {
+        return (List<Report>)readProperty("reports");
+    }
+
     public void setUser(User user) {
         setToOneTarget("user", user, true);
     }
@@ -179,6 +213,10 @@ public abstract class _Task extends BaseDataObject {
                 return this.timeTaken;
             case "willNotComplete":
                 return this.willNotComplete;
+            case "hours":
+                return this.hours;
+            case "reports":
+                return this.reports;
             case "user":
                 return this.user;
             default:
@@ -220,6 +258,12 @@ public abstract class _Task extends BaseDataObject {
             case "willNotComplete":
                 this.willNotComplete = val == null ? false : (boolean)val;
                 break;
+            case "hours":
+                this.hours = val;
+                break;
+            case "reports":
+                this.reports = val;
+                break;
             case "user":
                 this.user = val;
                 break;
@@ -248,6 +292,8 @@ public abstract class _Task extends BaseDataObject {
         out.writeObject(this.startDate);
         out.writeObject(this.timeTaken);
         out.writeBoolean(this.willNotComplete);
+        out.writeObject(this.hours);
+        out.writeObject(this.reports);
         out.writeObject(this.user);
     }
 
@@ -263,6 +309,8 @@ public abstract class _Task extends BaseDataObject {
         this.startDate = (Date)in.readObject();
         this.timeTaken = (Integer)in.readObject();
         this.willNotComplete = in.readBoolean();
+        this.hours = in.readObject();
+        this.reports = in.readObject();
         this.user = in.readObject();
     }
 
