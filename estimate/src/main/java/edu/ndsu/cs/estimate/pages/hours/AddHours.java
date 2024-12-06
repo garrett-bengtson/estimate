@@ -18,6 +18,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.Hours;
 import edu.ndsu.cs.estimate.cayenne.persistent.Task;
+import edu.ndsu.cs.estimate.model.LoggedHoursData;
 import edu.ndsu.cs.estimate.pages.tasks.Index;
 import edu.ndsu.cs.estimate.services.hours.HoursDatabaseService;
 import edu.ndsu.cs.estimate.services.tasks.TaskDatabaseService;
@@ -73,6 +74,7 @@ public class AddHours {
             hours = hoursDatabase.listAllHoursByTask(task);
         }
     }
+
     
     void onValidateFromHoursForm() {
         if (timestampStr == null) {

@@ -1,0 +1,26 @@
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" title="Logged Hours">
+    <link rel="stylesheet" type="text/css" href="/css/index.css" />
+    <div class="container">
+        <h2>Logged Hours</h2>
+        <t:if test="returnHours">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                	<th>Task Name</th>
+                    <th>Date Logged</th>
+                    <th>Hours Logged</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t:loop source="loggedHoursList" value="loggedHours" index="index">
+    				<tr>
+        				<td>${loggedHoursDates.get(index)}</td>
+        				<td>${loggedHoursList.get(index)}</td>
+    				</tr>
+				</t:loop>
+
+            </tbody>
+        </table>
+        </t:if>
+    </div>
+</t:layout>
