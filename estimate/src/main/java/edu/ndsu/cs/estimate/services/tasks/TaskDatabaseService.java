@@ -24,7 +24,7 @@ public interface TaskDatabaseService {
 	public void deleteTask(int PK); 
 	
 	public void	updateTask(Task task);
-	
+		
 	public CayenneService getCayenneService();
 	
 }

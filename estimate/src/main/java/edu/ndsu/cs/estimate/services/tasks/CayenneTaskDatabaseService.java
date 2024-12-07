@@ -7,10 +7,6 @@ import java.util.List;
 import org.apache.cayenne.Cayenne;
 import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ObjectSelect;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.SessionAttribute;
-
 import edu.ndsu.cs.estimate.cayenne.persistent.Task;
 import edu.ndsu.cs.estimate.cayenne.persistent.User;
 import edu.ndsu.cs.estimate.entities.interfaces.UserAccount;

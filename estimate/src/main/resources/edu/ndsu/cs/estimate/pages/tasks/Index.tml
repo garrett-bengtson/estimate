@@ -51,9 +51,10 @@
                                         <li>
                                             Custom Log Hours:
                                             <t:form t:id="addHourForm" context="task.PK">
-                                                <t:textfield t:id="hours" type="number" min="-1000000" max="1000000" />
-                                                <t:submit value="Add Hours" />
-                                            </t:form>
+											    <t:textfield t:id="hours" value="hours" type="number" min="-1000000" max="1000000" />
+											    <t:submit value="Add Hours" />
+											</t:form>
+
                                         </li>
                                         <li>
                                             Hours Quick Add:
