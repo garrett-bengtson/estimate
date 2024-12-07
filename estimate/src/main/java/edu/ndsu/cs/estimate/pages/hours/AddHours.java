@@ -73,22 +73,13 @@ public class AddHours {
             hours = hoursDatabase.listAllHoursByTask(task);
         }
     }
-
     
     void onValidateFromHoursForm() {
-    	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         if (timestampStr == null) {
             hoursForm.recordError("Invalid date format. Please use MM/dd/yyyy.");
         }
         else {
-        	Date timestampDate = null;
-        	try {
-        		timestampDate = formatter.parse(timestampStr);
-            	hour.setTimestamp(timestampDate);
-        	} catch(ParseException e) {
-        		hoursForm.recordError("Can't parse a Date");
-        	}
-        	
+        	Date timestampDate = parseDate(timestampStr);
     		task = taskDatabase.getTask(taskPK);
     		if(task.getTimeTaken() + hour.getHoursLogged() > 1000000) {
       			hoursForm.recordError("Total hours logged would be over one million.");
@@ -102,17 +93,7 @@ public class AddHours {
     			task.setTimeTaken(task.getTimeTaken() + hour.getHoursLogged());
     			taskDatabase.updateTask(task); // Update task in database
                 hour.setTimestamp(timestampDate);  // Set the parsed timeStamp on the `hour` object
-//                hour.setTask(task);
-                // hoursDatabase.updateHours(hour);
-                Hours addedHours = task.getObjectContext().newObject(Hours.class);
-                addedHours.setTimestamp(hour.getTimeStamp());
-                addedHours.setHoursLogged(hour.getHoursLogged());
-                
-                
-                
-    			task.addToHours(addedHours);
-    			addedHours.getObjectContext().commitChanges();
-                }
+    		}
         }
         
         List<String> errors = hour.validate();

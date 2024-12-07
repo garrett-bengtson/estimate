@@ -30,7 +30,7 @@
                 <div class="row justify-content-center mb-5">
                     <div class="col-md-6 col-lg-4 mb-3 d-grid gap-2">
                         <input type="submit" class="btn btn-primary" value="Add Hours" />
-						<t:pagelink page="tasks/EditTask" class="btn btn-secondary">Go Back</t:pagelink>
+                        <t:pagelink page="tasks" class="btn btn-secondary">Go Back</t:pagelink>
                     </div>
                 </div>
             </t:form>
