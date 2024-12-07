@@ -89,10 +89,23 @@ public class AddHours {
     			hoursForm.recordError("Total hours logged would be negative.");
     			return;
     		}
+    		else if(hour.getHoursLogged() == 0) {
+    			hoursForm.recordError("There is no reason to log 0 hours!");
+    			return;
+    		}
     		else {
     			task.setTimeTaken(task.getTimeTaken() + hour.getHoursLogged());
     			taskDatabase.updateTask(task); // Update task in database
                 hour.setTimestamp(timestampDate);  // Set the parsed timeStamp on the `hour` object
+    		
+                //Add an instance of the added hours to the Hours table
+                //for logging purposes
+                Hours addedHours = task.getObjectContext().newObject(Hours.class);
+                addedHours.setTimestamp(hour.getTimeStamp());
+                addedHours.setHoursLogged(hour.getHoursLogged());
+                
+                task.addToHours(addedHours);
+                addedHours.getObjectContext().commitChanges();
     		}
         }
         
@@ -110,6 +123,7 @@ public class AddHours {
         	Date parsedDate = dateFormat.parse(timestampStr);
             return parsedDate;
         } catch (ParseException e) {
+        	hoursForm.recordError("Can't parse a date.");
             return null;  // Return null if parsing fails
         }
     }

@@ -3,10 +3,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cayenne.Cayenne;
-//import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.ObjectContext;
 import org.apache.cayenne.query.ObjectSelect;
-import org.apache.cayenne.exp.Expression;
-import org.apache.cayenne.query.SelectQuery;
+//import org.apache.cayenne.exp.Expression;
+//import org.apache.cayenne.query.SelectQuery;
 //import org.apache.tapestry5.annotations.Persist;
 //import org.apache.tapestry5.annotations.Property;
 //import org.apache.tapestry5.annotations.SessionAttribute;
@@ -21,7 +21,7 @@ public class CayenneHoursDatabaseService implements HoursDatabaseService{
 
 	private CayenneService cayenneService;
 	
-	private Map<Integer, Hours> hoursMap;
+	//private Map<Integer, Hours> hoursMap;
 	
 	
 	public CayenneHoursDatabaseService(CayenneService cayenneService) {
@@ -41,11 +41,12 @@ public class CayenneHoursDatabaseService implements HoursDatabaseService{
 
 	@Override
 	public Hours getHours(int PK) {
-		Hours hours = hoursMap.get(PK);
-		if (hours != null) {
-			hours = Cayenne.objectForPK(cayenneService.newContext(), Hours.class, PK);
-		}
-		return hours;
+		return Cayenne.objectForPK(cayenneService.newContext(), Hours.class, PK);
+//		Hours hours = hoursMap.get(PK);
+//		if (hours != null) {
+//			hours = Cayenne.objectForPK(cayenneService.newContext(), Hours.class, PK);
+//		}
+//		return hours;
 	}
 
 	@Override
@@ -55,17 +56,17 @@ public class CayenneHoursDatabaseService implements HoursDatabaseService{
 
 	@Override
 	public void deleteHours(int PK) {
-//		ObjectContext context = cayenneService.newContext();
-//		Hours hours = Cayenne.objectForPK(context, Hours.class, PK);
-//		context.deleteObject(hours);
-//		context.commitChanges();
-		hoursMap.remove(PK);
+		ObjectContext context = cayenneService.newContext();
+		Hours hours = Cayenne.objectForPK(context, Hours.class, PK);
+		context.deleteObject(hours);
+		context.commitChanges();
+//		hoursMap.remove(PK);
 	}
 
 	@Override
 	public void updateHours(Hours hours) {
-//		((Hours)hours).getObjectContext().commitChanges();
-		hoursMap.put(hours.getPK(), hours);
+		((Hours)hours).getObjectContext().commitChanges();
+//		hoursMap.put(hours.getPK(), hours);
 	}
 	
 	

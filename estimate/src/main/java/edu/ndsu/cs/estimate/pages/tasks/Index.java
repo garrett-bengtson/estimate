@@ -15,6 +15,7 @@ import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.tynamo.security.services.SecurityService;
 
+import edu.ndsu.cs.estimate.cayenne.persistent.Hours;
 import edu.ndsu.cs.estimate.cayenne.persistent.Task;
 import edu.ndsu.cs.estimate.entities.interfaces.UserAccount;
 import edu.ndsu.cs.estimate.services.database.interfaces.UserAccountDatabaseService;
@@ -184,90 +185,68 @@ public class Index {
 	
 	//Custom hour logging. Note that there is input validation in the
 	//Index.tml file to make the range be between 1,000,000 and -1,000,000.
-	void onSubmitFromAddHourForm(int pk) {
+	void onSubmitFromAddHourForm(int pk, int hoursToAdd) {
 		Task tempTask = taskDBS.getTask(pk);
 		//Break out of the function if the current logged hours +
 		//the input is negative
-		if(tempTask.getTimeTaken() + this.hours < 0) {
+		if(tempTask.getTimeTaken() + hoursToAdd < 0) {
 			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be negative.");
 			return;
 		}
 		//Prevent extremely large inputs (total hours logged will never go over a million)
-		else if(isLoggedHoursSumLessThanOneMillion(tempTask, this.hours)){
-			System.out.println("Hours: " + this.hours);
-			int tempTime = tempTask.getTimeTaken() + this.hours;
-			tempTask.setTimeTaken(tempTime);
+		else if(isLoggedHoursSumLessThanOneMillion(tempTask, hoursToAdd)){
+			int newTotalTime = tempTask.getTimeTaken() + hoursToAdd;
+			tempTask.setTimeTaken(newTotalTime);
 			taskDBS.updateTask(tempTask);
+			
+			//Log the inputted hours to the Hours table, sets date to currrent date
+			Hours newHours = tempTask.getObjectContext().newObject(Hours.class);
+			newHours.setTimestamp(new Date());
+			newHours.setHoursLogged(hoursToAdd);
+			
+			tempTask.addToHours(newHours);
+			newHours.getObjectContext().commitChanges();
+			
 			getTasks(); //Update displayed tasks
 		}
 		else {
 			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
 		}
+	}
+	
+	//Note that users aren't allowed to input values above 1,000,000
+	//or -1,000,000 by the tml file.
+	@OnEvent(component = "addHourForm")
+	void addHourForm(int pk) {
+		// Retrieve the task by its primary key (pk)
+        Task tempTask = taskDBS.getTask(pk);
+        //Delegate to the existing 'onSubmitFromAddHourForm' method
+        if(hours != 0) {
+        	onSubmitFromAddHourForm(pk, hours);
+        }
+        else {
+			alertManager.alert(Duration.SINGLE, Severity.ERROR, "There is no reason to log 0 hours.");
+        }
 	}
 	
 	void onSubmitFromAdd1HourForm(int pk) {
-		Task tempTask = taskDBS.getTask(pk);
-		if(isLoggedHoursSumLessThanOneMillion(tempTask, 1)) {
-			int temp = tempTask.getTimeTaken() + (int)1;
-			tempTask.setTimeTaken(temp);
-			taskDBS.updateTask(tempTask);
-			getTasks(); //Update displayed tasks
-		}
-		else {
-			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
-		}
+		onSubmitFromAddHourForm(pk, 1);
 	}
 	
 	void onSubmitFromAdd2HourForm(int pk) {
-		Task tempTask = taskDBS.getTask(pk);
-		if(isLoggedHoursSumLessThanOneMillion(tempTask, 2)) {
-			int temp = tempTask.getTimeTaken() + (int)2;
-			tempTask.setTimeTaken(temp);
-			taskDBS.updateTask(tempTask);
-			getTasks(); //Update displayed tasks
-		}
-		else {
-			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
-		}
+		onSubmitFromAddHourForm(pk, 2);
 	}
 	
 	void onSubmitFromAdd3HourForm(int pk) {
-		Task tempTask = taskDBS.getTask(pk);
-		if(isLoggedHoursSumLessThanOneMillion(tempTask, 3)) {
-			int temp = tempTask.getTimeTaken() + (int)3;
-			tempTask.setTimeTaken(temp);
-			taskDBS.updateTask(tempTask);
-			getTasks(); //Update displayed tasks
-		}
-		else {
-			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
-		}
+		onSubmitFromAddHourForm(pk, 3);
 	}
 	
 	void onSubmitFromAdd5HourForm(int pk) {
-		Task tempTask = taskDBS.getTask(pk);
-		if(isLoggedHoursSumLessThanOneMillion(tempTask, 5)) {
-			int temp = tempTask.getTimeTaken() + (int)5;
-			tempTask.setTimeTaken(temp);
-			taskDBS.updateTask(tempTask);
-			getTasks(); //Update displayed tasks
-		}
-		else {
-			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
-		}
+		onSubmitFromAddHourForm(pk, 5);
 	}
 	
 	void onSubmitFromAdd10HourForm(int pk) {
-		Task tempTask = taskDBS.getTask(pk);
-		if(isLoggedHoursSumLessThanOneMillion(tempTask, 10)) {
-			int temp = tempTask.getTimeTaken() + (int)10;
-			tempTask.setTimeTaken(temp);
-			taskDBS.updateTask(tempTask);
-			getTasks(); //Update displayed tasks
-		}
-		else {
-			alertManager.alert(Duration.SINGLE, Severity.ERROR, "Total hours logged can't be more than 1,000,000");
-		}
+		onSubmitFromAddHourForm(pk, 10);
 	}
 	
 	void makeExampleTasks() {
@@ -276,7 +255,6 @@ public class Index {
             CayenneTaskFactory.generateInstance(taskDBS.getCayenneService().newContext(), userAccount);
         }
         getTasks(); //Update displayed tasks after adding
-        System.err.println("Amount of tasks now " + tasks.size());
 	}
 	
 	@OnEvent(component="complete")
