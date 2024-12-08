@@ -2,7 +2,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/estimation.css" />
 
 	<t:security.authenticated>
-		<t:grid source="exercise" row="exercise" include="name, descritption">
+		<t:grid source="exercise" row="exercise" include="name, description">
 		</t:grid>
 		
 		<t:form t:id="estimateForm" >
