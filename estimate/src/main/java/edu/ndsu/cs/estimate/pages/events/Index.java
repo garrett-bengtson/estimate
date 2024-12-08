@@ -101,15 +101,22 @@ public class Index {
         	userAccount = userAccountDatabaseService.getUserAccount(principal);
     	}	
         getEvents();
-        noEvents = (events == null) || events.isEmpty();
+        //No events is true if there are no events OR
+        //if none of the events are approved for users.
+        noEvents = (events == null) || events.isEmpty() ||
+        		events.stream()
+        		.filter(event -> event.isApproved() == true || userAccount.isAdmin())
+        		.collect(Collectors.toList()).isEmpty();
         
         eventsWithResults = events.stream()
                 .filter(event -> event.getResult() != null)
+                .filter(event -> event.isApproved() == true || userAccount.isAdmin())
                 .collect(Collectors.toList());
         noEventsWithResults = (eventsWithResults == null) || eventsWithResults.isEmpty();
 
         eventsWithoutResults = events.stream()
                    .filter(event -> event.getResult() == null)
+                   .filter(event -> event.isApproved() == true || userAccount.isAdmin())
                    .collect(Collectors.toList());
         noEventsWithoutResults = (eventsWithoutResults == null) || eventsWithoutResults.isEmpty();
     }

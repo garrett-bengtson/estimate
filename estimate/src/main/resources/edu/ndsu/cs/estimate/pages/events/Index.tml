@@ -105,7 +105,9 @@
                             <th class="col-md-3">Description</th>
                             <th class="col-md-2">Result</th>
                             <th class="col-md-2">Approval</th>
-                            <th class="col-md-2">Actions</th>
+                            <t:if test="userAccount.isAdmin()">
+                            	<th class="col-md-2">Actions</th>
+                            </t:if>
                         </tr>
                     </thead>                    
                     <tbody>
