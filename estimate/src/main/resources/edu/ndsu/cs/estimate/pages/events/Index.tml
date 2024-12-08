@@ -54,7 +54,9 @@
                             <th class="col-md-3">Description</th>
                             <th class="col-md-2">Result</th>
                             <th class="col-md-2">Approval</th>
-                            <th class="col-md-2">Actions</th>
+                            <t:if test="userAccount.isAdmin()">
+                            	<th class="col-md-2">Actions</th>
+                            </t:if>
                         </tr>
                     </thead>                    
                     <tbody>
@@ -62,25 +64,25 @@
                             <t:if test="isPublicEvent(currentEvent.approved)">
                             	<tr>
                                 	<td>${currentEvent.formattedEventDate}</td>
-                                	<td>${currentEvent.category}</td>
-                                	<td>${currentEvent.name}</td>
-                                	<td>${currentEvent.description}</td>
+                                	<td style="max-width:150px; word-break:break-all;">${currentEvent.category}</td>
+                                	<td style="max-width:200px; word-break:break-all;">${currentEvent.name}</td>
+                                	<td style="max-width:300px; word-break:break-all;">${currentEvent.description}</td>
                                 	<td>${currentEvent.result}</td>
                                 	<td>${currentEvent.approved}</td>
-                                	<td>
-                                    	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
-                                    	<t:actionlink t:id="deleteUncompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
-                                    	<t:if test="userAccount.isAdmin()">                                   		
-                                    			<t:actionlink t:id="changeApprovalStatusUncompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
-                                    				<t:if test="!currentEvent.approved">
-                                    					Approve
-                                    				</t:if>
-                                    				<t:if test="currentEvent.approved">
-                                    					Disapprove
-                                    				</t:if>
-                                    			</t:actionlink>                                   		
-                                    	</t:if>
-                                	</td>
+                                	<t:if test="userAccount.isAdmin()">
+		                            	<td>
+		                                	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
+		                                	<t:actionlink t:id="deleteUncompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
+                                			<t:actionlink t:id="changeApprovalStatusUncompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
+                                				<t:if test="!currentEvent.approved">
+                                					Approve
+                                				</t:if>
+                                				<t:if test="currentEvent.approved">
+                                					Disapprove
+                                				</t:if>
+                                			</t:actionlink>     
+		                            	</td>
+                                	</t:if>
                             	</tr>
                             </t:if>
                         </t:loop>
@@ -111,25 +113,25 @@
                             <t:if test="isPublicEvent(currentEvent.approved)">
                             	<tr>
                                 	<td>${currentEvent.formattedEventDate}</td>
-                                	<td>${currentEvent.category}</td>
-                                	<td>${currentEvent.name}</td>
-                                	<td>${currentEvent.description}</td>
+                                	<td style="max-width:150px; word-break:break-all;">${currentEvent.category}</td>
+                                	<td style="max-width:200px; word-break:break-all;">${currentEvent.name}</td>
+                                	<td style="max-width:300px; word-break:break-all;">${currentEvent.description}</td>
                                 	<td>${currentEvent.result}</td>
                                 	<td>${currentEvent.approved}</td>
-                                	<td>
-                                    	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
-                                    	<t:actionlink t:id="deleteCompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>
-                                    	<t:if test="userAccount.isAdmin()">                                   		
-                                    			<t:actionlink t:id="changeApprovalStatusCompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
-                                    				<t:if test="!currentEvent.approved">
-                                    					Approve
-                                    				</t:if>
-                                    				<t:if test="currentEvent.approved">
-                                    					Disapprove
-                                    				</t:if>
-                                    			</t:actionlink>                                   		
-                                    	</t:if>
-                                	</td>
+                                	<t:if test="userAccount.isAdmin()">
+	                                	<td>
+	                                    	<t:pagelink page="events/Edit" context="${currentEvent.id}" class="btn btn-sm btn-warning me-2">Edit</t:pagelink>
+	                                    	<t:actionlink t:id="deleteCompleted" event="action" context="${currentEvent.id}" class="btn btn-sm btn-danger">Delete</t:actionlink>                                 		
+                                			<t:actionlink t:id="changeApprovalStatusCompleted" context="${currentEvent.id}" class="btn btn-sm btn-primary">
+                            				<t:if test="!currentEvent.approved">
+                            					Approve
+                            				</t:if>
+                            				<t:if test="currentEvent.approved">
+                            					Disapprove
+                            				</t:if>
+                                			</t:actionlink>  
+	                                	</td>
+                                	</t:if>
                             	</tr>
                             </t:if>
                         </t:loop>

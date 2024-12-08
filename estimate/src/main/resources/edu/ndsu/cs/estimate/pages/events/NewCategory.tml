@@ -8,22 +8,24 @@
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
-                        <t:label for="name" class="form-label"/>
-                        <t:textField t:id="name" value="name" class="form-control"/>
+                        <t:label for="name" class="form-label">Event Name</t:label>
+                        <t:textField t:id="name" value="name" maxlength="50" class="form-control"/>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
-                        <t:label for="categoryTextField" class="form-label"/>
-                        <t:textField t:id="categoryTextField" value="category" class="form-control"/>
+                        <t:label for="categoryTextField" class="form-label">
+                        	Category Name
+                        </t:label>
+                        <t:textField t:id="categoryTextField" value="category" maxlength="25" class="form-control"/>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4 mb-3">
                         <t:label for="description" class="form-label"/>
-                        <t:textField t:id="description" value="description" class="form-control"/>
+                        <t:textField t:id="description" value="description" maxlength="500" class="form-control"/>
                     </div>
                 </div>
 
