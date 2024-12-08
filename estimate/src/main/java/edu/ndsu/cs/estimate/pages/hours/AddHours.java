@@ -2,6 +2,7 @@ package edu.ndsu.cs.estimate.pages.hours;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -80,6 +81,13 @@ public class AddHours {
         }
         else {
         	Date timestampDate = parseDate(timestampStr);
+        	
+        	//Check if the inputted date is in the future
+        	Date today = new Date();
+        	if(timestampDate.after(today)) {
+        		hoursForm.recordError("Date cannot be in the future.");
+        		return;
+        	}
     		task = taskDatabase.getTask(taskPK);
     		if(task.getTimeTaken() + hour.getHoursLogged() > 1000000) {
       			hoursForm.recordError("Total hours logged would be over one million.");
@@ -108,12 +116,10 @@ public class AddHours {
                 addedHours.getObjectContext().commitChanges();
     		}
         }
-        
-        List<String> errors = hour.validate();
-        for (String error : errors) {
-            hoursForm.recordError(error);
-        }
-        
+//        List<String> errors = hour.validate();
+//        for (String error : errors) {
+//            hoursForm.recordError(error);
+//        }
     }
      
     private Date parseDate(String timestampStr) {
