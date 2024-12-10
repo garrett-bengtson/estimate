@@ -1,0 +1,37 @@
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" title="EstiMate - Reports">
+    <link rel="stylesheet" type="text/css" href="/css/index.css"></link>
+    
+    <t:security.authenticated>
+        <div class="container my-3">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-3 order-lg-1 order-1 mb-2 mb-lg-0 text-center text-lg-start enav">
+                    <h3>Generate Report</h3>
+                </div>
+                <div class="col-12 col-lg-6 order-lg-2 order-2 mb-2 mb-lg-0 text-center">
+                    <t:form t:id="reportForm" class="report-form w-100">
+                        <input type="submit" class="btn btn-primary" value="Generate Report" />
+                    </t:form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container mt-4">
+            <h3>Existing Reports</h3>
+            <ul>
+                <t:loop source="reports" value="report">
+                    <li>${report.category}</li>
+                </t:loop>
+            </ul>
+        </div>
+    </t:security.authenticated>
+    
+    <t:security.notauthenticated>
+        <div class="container d-flex justify-content-center align-items-center loginMessage">
+            <div class="row">
+                <div class="col text-center">
+                    <h2>You need to log in to view this.</h2>
+                </div>
+            </div>
+        </div>
+    </t:security.notauthenticated>
+</t:layout>
