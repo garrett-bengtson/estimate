@@ -37,6 +37,14 @@ public class CayenneTaskDatabaseService implements TaskDatabaseService{
 				.where(Task.COMPLETED.eq(false).andExp(Task.DROPPED.eq(false).andExp(Task.WILL_NOT_COMPLETE.eq(false)).andExp(Task.CANNOT_COMPLETE.eq(false)).andExp(Task.EST_END_DATE.between(start, end).andExp(Task.USER.eq((User)user)))))
 				.select(cayenneService.newContext());
 	}
+	
+	public List<? extends Task> listAllTasksAll(Date start, Date end, UserAccount user) {
+	    return ObjectSelect.query(Task.class)
+	            .where(Task.EST_END_DATE.between(start, end)
+	            .andExp(Task.USER.eq((User) user)))
+	            .select(cayenneService.newContext());
+	}
+
 
 	@Override
 	public List<? extends Task> listCompleted(User user){

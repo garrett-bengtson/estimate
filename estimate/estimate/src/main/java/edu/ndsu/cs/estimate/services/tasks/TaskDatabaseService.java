@@ -26,6 +26,7 @@ public interface TaskDatabaseService {
 	public void	updateTask(Task task);
 	
 	public CayenneService getCayenneService();
+	public List<? extends Task> listAllTasksAll(Date start, Date end, UserAccount userAccount);
 	
 }
 

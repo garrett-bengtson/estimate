@@ -1,11 +1,13 @@
 package edu.ndsu.cs.estimate.services.database.interfaces;
 
 import edu.ndsu.cs.estimate.cayenne.persistent.Report;
+import edu.ndsu.cs.estimate.cayenne.persistent.Task;
+
 import java.util.List;
 
 public interface ReportDatabaseService {
 
-    void saveReport(Report report);
+    void saveReport(String category, Double daysSinceTaskStart, Double estimatedDaysToCompletion, Double netLossGain, String taskStatus, List<? extends Task> task);
 
     List<Report> findAllReports();
 
@@ -13,5 +15,5 @@ public interface ReportDatabaseService {
 
     void updateReport(Report report);
 
-    void deleteReport(Report report);
+    void deleteReport(int reportPK);
 }
