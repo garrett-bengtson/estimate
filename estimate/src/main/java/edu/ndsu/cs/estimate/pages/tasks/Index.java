@@ -36,11 +36,11 @@ public class Index {
     @Persist
     private String dateRange;
 
-    @InjectComponent
-    private Form dateForm;
-
     @Component(id = "dateRange", parameters = {"value=dateRange"})
     private TextField dateRangeField;
+    
+    @InjectComponent
+    private Form dateForm;
     
 	@Persist
 	@Property

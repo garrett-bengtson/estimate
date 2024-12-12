@@ -1,5 +1,6 @@
 package edu.ndsu.cs.estimate.services;
-
+import org.apache.cayenne.configuration.server.ServerModule;
+import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.web.mgt.WebSecurityManager;
@@ -20,13 +21,13 @@ import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
 import org.slf4j.Logger;
 import org.tynamo.security.SecuritySymbols;
-
 import edu.ndsu.cs.estimate.security.LocalSecurityRealm;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneEstimationCategoryDatabaseService;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneEstimationEstimateDatabaseService;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneEstimationExercisesDatabaseService;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneEstimationSuggestionDatabaseService;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneEventDatabaseService;
+import edu.ndsu.cs.estimate.services.database.implementations.CayenneReportDatabaseService;
 import edu.ndsu.cs.estimate.services.database.implementations.CayenneUserAccountDatabaseService;
 import edu.ndsu.cs.estimate.services.database.interfaces.CayenneService;
 import edu.ndsu.cs.estimate.services.database.interfaces.EstimationCategoryDatabaseService;
@@ -34,25 +35,21 @@ import edu.ndsu.cs.estimate.services.database.interfaces.EstimationEstimateDatab
 import edu.ndsu.cs.estimate.services.database.interfaces.EstimationExerciseDatabaseService;
 import edu.ndsu.cs.estimate.services.database.interfaces.EstimationSuggestionDatabaseService;
 import edu.ndsu.cs.estimate.services.database.interfaces.EventDatabaseService;
+import edu.ndsu.cs.estimate.services.database.interfaces.ReportDatabaseService;
 import edu.ndsu.cs.estimate.services.database.interfaces.UserAccountDatabaseService;
 import edu.ndsu.cs.estimate.services.hours.CayenneHoursDatabaseService;
 import edu.ndsu.cs.estimate.services.hours.HoursDatabaseService;
 import edu.ndsu.cs.estimate.services.tasks.CayenneTaskDatabaseService;
 import edu.ndsu.cs.estimate.services.tasks.TaskDatabaseService;
-
 import java.io.IOException;
 import java.util.UUID;
-
 /**
  * This module is automatically included as part of the Tapestry IoC Registry, it's a good place to
  * configure and extend Tapestry, or to place your own service definitions.
  */
-
 public class AppModule {
-
     public static void bind(ServiceBinder binder) {
         // binder.bind(MyServiceInterface.class, MyServiceImpl.class);
-
         // Make bind() calls on the binder object to define most IoC services.
         // Use service builder methods (example below) when the implementation
         // is provided inline, or requires more initialization than simply
@@ -61,6 +58,10 @@ public class AppModule {
     	binder.bind(CayenneService.class, CayenneServiceImpl.class);
     	
     }
+    
+    public static ServerRuntime buildServerRuntime() { 
+    	return ServerRuntime.builder() .addConfig("cayenne-project.xml") .addModule(new ServerModule()) .build();
+    	}
     
     public static UserAccountDatabaseService buildUserAccounttDatabaseService(CayenneService cayenneService)
     {
@@ -92,6 +93,10 @@ public class AppModule {
     
     public static HoursDatabaseService buildHoursDatabaseService(CayenneService cayenneService) {
     	return new CayenneHoursDatabaseService(cayenneService);
+    }   
+    
+    public static ReportDatabaseService buildReportDatabaseService(CayenneService cayenneService) {
+    	return new CayenneReportDatabaseService(cayenneService);
     }
     
     @Contribute(WebSecurityManager.class)
@@ -102,15 +107,12 @@ public class AppModule {
     	localSecurityRealm.setCredentialsMatcher(new HashedCredentialsMatcher("SHA-512"));
     	configuration.add(localSecurityRealm);
     }
-
     public static void contributeFactoryDefaults(MappedConfiguration<String, Object> configuration) {
         // The values defined here (as factory default overrides) are themselves
         // overridden with application defaults by DevelopmentModule and QaModule.
-
         // The application version is primarily useful as it appears in
         // any exception reports (HTML or textual).
         configuration.override(SymbolConstants.APPLICATION_VERSION, "1.0");
-
         // This is something that should be removed when going to production, but is useful
         // in the early stages of development.
         configuration.override(SymbolConstants.PRODUCTION_MODE, false);
@@ -118,7 +120,6 @@ public class AppModule {
         // Ensure alerts persist across redirects
         configuration.add("tapestry.alerts.persistence", "flash");
     }
-
     public static void contributeApplicationDefaults(MappedConfiguration<String, Object> configuration) {
         // Contributions to ApplicationDefaults will override any contributions to
         // FactoryDefaults (with the same key). Here we're restricting the supported
@@ -127,18 +128,15 @@ public class AppModule {
         // the first locale name is the default when there's no reasonable match).
         configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
         configuration.add(SecuritySymbols.LOGIN_URL, "/login");
-
         // You should change the passphrase immediately; the HMAC passphrase is used to secure
         // the hidden field data stored in forms to encrypt and digitally sign client-side data.
         configuration.add(SymbolConstants.HMAC_PASSPHRASE, "change this immediately-" + UUID.randomUUID());
-
         configuration.add(SymbolConstants.ENABLE_PAGELOADING_MASK, Boolean.FALSE);
         configuration.add(SymbolConstants.ENABLE_HTML5_SUPPORT, Boolean.FALSE);
         
         //Use bootstrap 5.3.2
         configuration.add(SymbolConstants.BOOTSTRAP_ROOT, "context:/bootstrap-5.3.2-dist");
     }
-
 	/**
 	 * Use annotation or method naming convention: <code>contributeApplicationDefaults</code>
 	 */
@@ -149,8 +147,6 @@ public class AppModule {
         // option in 5.5.
 		configuration.add(SymbolConstants.JAVASCRIPT_INFRASTRUCTURE_PROVIDER, "jquery");
 	}
-
-
     /**
      * This is a service definition, the service will be named "TimingFilter". The interface,
      * RequestFilter, is used within the RequestHandler service pipeline, which is built from the
@@ -173,12 +169,10 @@ public class AppModule {
         return new RequestFilter() {
             public boolean service(Request request, Response response, RequestHandler handler) throws IOException {
                 long startTime = System.currentTimeMillis();
-
                 try {
                     // The responsibility of a filter is to invoke the corresponding method
                     // in the handler. When you chain multiple filters together, each filter
                     // received a handler that is a bridge to the next filter.
-
                     return handler.service(request, response);
                 } finally {
                     long elapsed = System.currentTimeMillis() - startTime;
@@ -187,7 +181,6 @@ public class AppModule {
             }
         };
     }
-
     /**
      * This is a contribution to the RequestHandler service configuration. This is how we extend
      * Tapestry using the timing filter. A common use for this kind of filter is transaction

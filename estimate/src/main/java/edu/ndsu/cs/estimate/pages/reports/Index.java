@@ -1,164 +1,136 @@
 package edu.ndsu.cs.estimate.pages.reports;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import org.apache.tapestry5.ComponentResources;
-import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.annotations.SessionState;
+import org.apache.tapestry5.annotations.SessionAttribute;
 import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.TextField;
-import org.apache.tapestry5.http.Link;
-import org.apache.tapestry5.http.services.Response;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.runtime.ComponentEventException;
-import org.apache.tapestry5.services.ComponentEventLinkEncoder;
-import org.apache.tapestry5.services.PageRenderLinkSource;
-import org.apache.tapestry5.annotations.ActivationRequestParameter;
-
-import org.apache.tapestry5.services.PageRenderRequestParameters;
 import org.tynamo.security.services.SecurityService;
 
-
+import edu.ndsu.cs.estimate.cayenne.persistent.Report;
 import edu.ndsu.cs.estimate.cayenne.persistent.Task;
-import edu.ndsu.cs.estimate.cayenne.persistent.User;
 import edu.ndsu.cs.estimate.entities.interfaces.UserAccount;
-import edu.ndsu.cs.estimate.model.ReportInfo;
+import edu.ndsu.cs.estimate.services.database.interfaces.ReportDatabaseService;
 import edu.ndsu.cs.estimate.services.database.interfaces.UserAccountDatabaseService;
 import edu.ndsu.cs.estimate.services.tasks.TaskDatabaseService;
 
+import org.apache.tapestry5.OptionModel;
+import org.apache.tapestry5.SelectModel;
+import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.internal.SelectModelImpl;
+import org.apache.tapestry5.alerts.AlertManager;
+
 public class Index {
-	@Inject
-	private TaskDatabaseService taskDBS;
-	
-	@Property
-	private List<? extends Task> tasks;
-	@SuppressWarnings("deprecation")
-	@Property
-	@Persist
-	private Date start; 
-	
-	@SuppressWarnings("deprecation")
-	@Property 
-	@Persist
-	private Date end;
-	
-    @Inject
-    private PageRenderLinkSource pageRenderLinkSource;
+
+    @Inject 
+    private AlertManager alertManager;
     
-    @Inject
-    private Response response;
+    @SessionAttribute
+    @Property
+    private Boolean noTasks = null;
     
     @Property
     @Persist
     private String dateRange;
-    
-    @InjectComponent
-    private Form dateForm;
-    
+
     @Component(id = "dateRange", parameters = {"value=dateRange"})
     private TextField dateRangeField;
-	
-	@Property
-	private Task task; 
-	int size;
-	
-	@Inject
-	private SecurityService securityService;
 
-	@Inject
-	private UserAccountDatabaseService userAccountDatabaseService;
-	
-	@Property
-	@Persist
-	private UserAccount	userAccount;
-	
-	@Property
-	private boolean noTasks;
+    @Component(id = "newCategoryField", parameters = {"value=newCategory"})
+    private TextField newCategoryField;
 
-	private ArrayList<String> nameList = new ArrayList<String>();
-	private ArrayList<Long> Estimated = new ArrayList<Long>();
-	private ArrayList<Long> Actual = new ArrayList<Long>();
-	private ArrayList<String> Status = new ArrayList<String>();
-	private ArrayList<Integer> TimeTaken = new ArrayList<Integer>();
-	
-	@InjectPage
-	private ViewReport viewReport;
-	
-	@Property
-	private ArrayList<ReportInfo> reports = new ArrayList<ReportInfo>();
-	
-	@Property
-	private ReportInfo report;
-	
-	@SessionState
-	private ReportInfo returnReport;
-    
-    @Property
-    private String formattedDate;
-   
-    
+    @InjectComponent
+    private Form dateForm;
+
+    @InjectComponent
+    private Form categoryForm;
+
+    @Inject
+    private TaskDatabaseService taskDBS;
+
+    @Inject
+    private ReportDatabaseService reportDBS;
+
     @Persist
     @Property
-    int index;
-    //ran out of time
+    private List<? extends Task> tasks;
 
     @Property
-	private boolean noReports;
-	
-	@SetupRender
-	void setupRender() {
-		noReports = index == 0;
-        if (securityService.getSubject().getPrincipal() == null ) {
-        	return;  //User needs to log in
-        }
-        formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		String principal = securityService.getSubject().getPrincipal().toString(); 
-		userAccount = userAccountDatabaseService.getUserAccount(principal);
-		getTasks();
-		size = tasks.size();
-		
-	}
-	
-    private void getTasks() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        dateFormat.setLenient(false);
-        Date start = new Date(0); // 1/1/1970
-        // 0 ms after 1/1/1970
-        Date end = new Date(2145916800000L); // 1/1/2038
-        // 2145916800000 ms after 1/1/1970, L for long input, instead of int
+    private List<Report> reports;
 
-        if (dateRange != null && !dateRange.isEmpty()) {
-            String[] dates = dateRange.split(" - ");
-            try {
-                start = dateFormat.parse(dates[0]);
-                // If there is an end date, parse it; otherwise, use the start date for both
-                end = (dates.length == 2) ? dateFormat.parse(dates[1]) : start;
-            } catch (ParseException e) {
-                dateForm.recordError("The date range format is invalid.");
-                return;
-            }
-        }
+    @Property
+    private Report report;
 
-        tasks = taskDBS.listAllTasks(start, end, userAccount); // Fetch tasks based on date range
-        noTasks = tasks.isEmpty();
+    @Property
+    private Task task;
+
+    @Inject
+    private SecurityService securityService;
+
+    @Inject
+    private UserAccountDatabaseService userAccountDatabaseService;
+    
+    @Property
+    private UserAccount userAccount;
+
+    @Property
+    private List<String> categories = new ArrayList<>();
+
+    @Component(id = "categorySelect", parameters = {"value=category", "model=categoryModel", "blankOption=never"})
+    private org.apache.tapestry5.corelib.components.Select categorySelect;
+
+    @Persist
+    @Property
+    private String category;
+
+    @Persist
+    @Property
+    private String newCategory;
+
+    @Persist
+    @Property
+    private String hiddenCategory; // Ensure this property is declared
+
+    @Property
+    private SelectModel categoryModel;
+
+    @SetupRender
+    void setupRender() {
+        if (securityService.getSubject().getPrincipal() == null) {
+            return;  // User needs to log in
+        }
+        String principal = securityService.getSubject().getPrincipal().toString();
+        userAccount = userAccountDatabaseService.getUserAccount(principal);
+        getTasks();
+        reports = reportDBS.findAllReports();  // Fetch reports from the database
+        categories = reports.stream()
+                            .map(Report::getCategory)
+                            .distinct()
+                            .collect(Collectors.toList());
+        categories.add("All Categories");
+        categoryModel = createCategoryModel();
     }
-	
+
+    private SelectModel createCategoryModel() {
+        List<OptionModel> options = new ArrayList<>();
+        for (String cat : categories) {
+            options.add(new OptionModelImpl(cat, cat));
+        }
+        return new SelectModelImpl(null, options);
+    }
+
     void onValidateFromDateForm() {
         if (dateRange != null && !dateRange.isEmpty()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -176,104 +148,100 @@ public class Index {
             }
         }
     }
-    
-	public long returnDifferenceEstimated(Task task) {
-		Date TaskStartDate = task.getStartDate();
-		System.out.println("Start Date" + task.getStartDate() + "| End Date : " + task.getEstEndDate());
-		Date TaskExpectedEndDate = task.getEstEndDate();
-		
-		long StartExpectDiffInMilli = Math.abs(TaskExpectedEndDate.getTime() - TaskStartDate.getTime());
-		long StartExpectDiffInDays = TimeUnit.DAYS.convert(StartExpectDiffInMilli, TimeUnit.MILLISECONDS);
-		
-		return StartExpectDiffInDays;
-	}
-	public long returnDifferenceActual(Task task) {
-		Date TaskStartDate = task.getStartDate();
-		LocalDate holderDate = task.getActualEndDate();
 
-		if(holderDate == null)
-			return -1;
-		Date TaskActualEndDate= Date.from(holderDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		
-		long StartActualDiffInMilli = Math.abs(TaskActualEndDate.getTime() - TaskStartDate.getTime());
-		long StartActualtDiffInDays = TimeUnit.DAYS.convert(StartActualDiffInMilli, TimeUnit.MILLISECONDS);
-		
-		return StartActualtDiffInDays ;
-	}
-    
-    void onSuccessFromDateForm() {
-    	index++;
-    	getTasks();
-    	nameList.clear();
-    	Estimated.clear();
-    	Actual.clear();
-    	Status.clear();
-    	TimeTaken.clear();
-    	for(Task t:tasks) 
-    	{
-    		reports.clear();
-    		nameList.add(t.getName());
-    		Estimated.add(returnDifferenceEstimated(t));
-    		Actual.add(returnDifferenceActual(t));
-    		TimeTaken.add(t.getTimeTaken());
-    		Boolean dropped = t.getDropped();
-    		Boolean completed = t.getCompleted();
-    		Boolean willNotComplete = t.getWillNotComplete();
-    		Boolean cannotComplete = t.getCannotComplete();
-    		if(dropped.equals(true))
-    		{
-    			Status.add("Dropped");
-    		} else if (completed.equals(true))
-    		{
-    			Status.add("Completed");
-    		} else if (willNotComplete.equals(true))
-    		{
-    			Status.add("Will not complete");
-    		} else if (cannotComplete.equals(true))
-    		{
-    			Status.add("Cannot complete");
-    		}else
-    		{
-    			Status.add("In Progress");
-    		}
-    	}
-    	report = new ReportInfo(nameList, Estimated, Actual, Status, TimeTaken);
-    	returnReport = report;
-    	reports.add(report);	
+    private void getTasks() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setLenient(false);
+        Date start = new Date(0); // 1/1/1970
+        Date end = new Date(2145916800000L); // 1/1/2038
+
+        if (dateRange != null && !dateRange.isEmpty()) {
+            String[] dates = dateRange.split(" - ");
+            try {
+                start = dateFormat.parse(dates[0]);
+                end = (dates.length == 2) ? dateFormat.parse(dates[1]) : start;
+            } catch (ParseException e) {
+                dateForm.recordError("The date range format is invalid.");
+                return;
+            }
+        }
+
+        tasks = taskDBS.listAllTasksAll(start, end, userAccount);
+        noTasks = tasks.isEmpty();
     }
-	
-	//Most likely will not use, can probably be removed later
-	@SuppressWarnings("deprecation")
-	public void recreateGraph() {
-		System.out.println("hello two");
-		Date start = new Date("12/1/2022");
-		Date end = new Date("12/9/2022");
-		tasks = taskDBS.listAllTasks(start,end, (User)this.userAccount);
-		size = tasks.size();
-		Object[][] graphArray = new Object[size][3];
-		graphArray[0][0] = " ";
-		graphArray[0][1] = "Expected Days";
-		graphArray[0][2] = "Actual Days";
-		int currentPointer = 1;
-		System.out.println(tasks.toString());
-		System.out.println(graphArray[0][1]);
-		for (Task currentTask : tasks) {
-			String TaskName = currentTask.getName();
-			Date TaskStartDate = currentTask.getStartDate();
-			Date TaskExpectedEndDate = currentTask.getEstEndDate();
-			LocalDate holderDate = currentTask.getActualEndDate();
-			Date TaskActualEndDate= Date.from(holderDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-			
-			
-			long StartExpectDiffInMilli = Math.abs(TaskExpectedEndDate.getTime() - TaskStartDate.getTime());
-			long StartExpectDiffInDays = TimeUnit.DAYS.convert(StartExpectDiffInMilli, TimeUnit.MILLISECONDS);
-			
-			long StartActualDiffInMilli = Math.abs(TaskActualEndDate.getTime() - TaskStartDate.getTime());
-			long StartActualDiffInDays = TimeUnit.DAYS.convert(StartActualDiffInMilli, TimeUnit.MILLISECONDS);
-			graphArray[currentPointer][0] =TaskName;
-			graphArray[currentPointer][1] = StartExpectDiffInDays;
-			graphArray[currentPointer][2] = StartActualDiffInDays;
-			System.out.println(graphArray[currentPointer][0] + " " + graphArray[currentPointer][1] + " " + graphArray[currentPointer][2]);	
-		}
-	}
+
+    @OnEvent(value = "action", component = "deleteLink")
+    void deleteReport(Integer reportPK) {
+        try {
+            reportDBS.deleteReport(reportPK);
+            alertManager.success("Report deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            alertManager.error(e.getMessage());
+        }
+
+        // Refresh the list of reports
+        reports = reportDBS.findAllReports();
+    }
+
+    @OnEvent(value = "submit", component = "categoryForm")
+    void onCategoryFormSubmit() {
+        if (category == null || category.isEmpty()) {
+            categoryForm.recordError("Category cannot be empty.");
+        } else {
+            generateReport();
+        }
+    }
+
+    void generateReport() {
+        if (tasks == null || tasks.isEmpty()) {
+            alertManager.error("Tasks are null or empty. Cannot save report.");
+            return;
+        }
+
+        // Ensure category is selected
+        if (category == null || category.isEmpty()) {
+            alertManager.error("Category cannot be empty.");
+            return;
+        }
+
+        // Set actual values for the report
+        Double daysSinceTaskStart = calculateDaysSinceTaskStart(tasks.get(0));
+        Double estimatedDaysToCompletion = calculateEstimatedDaysToCompletion(tasks);
+        Double netLossGain = calculateNetLossGain(tasks);
+        String taskStatus = tasks.get(0).getName();
+
+        // Save report with all tasks
+        reportDBS.saveReport(category, daysSinceTaskStart, estimatedDaysToCompletion, netLossGain, taskStatus, tasks);
+        alertManager.success("Report saved successfully.");
+
+        // Refresh the list of reports
+        reports = reportDBS.findAllReports();
+    }
+      
+    
+    private Double calculateDaysSinceTaskStart(Task task) {
+        Date startDate = task.getStartDate();
+        Date currentDate = new Date();
+        long differenceInMillies = Math.abs(currentDate.getTime() - startDate.getTime());
+        long differenceInDays = differenceInMillies / (24 * 60 * 60 * 1000);
+        return (double) differenceInDays;
+    }
+
+    private Double calculateEstimatedDaysToCompletion(List<? extends Task> tasks) {
+        return tasks.stream()
+            .filter(task -> task.getEstEndDate() != null)
+            .mapToDouble(task -> {
+                long differenceInMillies = task.getEstEndDate().getTime() - new Date().getTime();
+                long differenceInDays = differenceInMillies / (24 * 60 * 60 * 1000);
+                return (double) differenceInDays;
+            })
+            .average()
+            .orElse(0.0);
+    }
+
+    private Double calculateNetLossGain(List<? extends Task> tasks) {
+        return tasks.stream()
+            .mapToDouble(Task::getTimeTaken) // This assumes 'timeTaken' represents a net value
+            .sum();
+    }
 }

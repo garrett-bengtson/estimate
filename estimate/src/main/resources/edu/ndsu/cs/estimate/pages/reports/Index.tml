@@ -1,67 +1,102 @@
-<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" title="Reports | EstiMate">
-   <link rel="stylesheet" type="text/css" href="css/report.css">
-   </link>
-   <t:security.authenticated>
-      <div class="container my-3">
-         <div class="row align-items-center">
-            <div class="col-12 col-lg-3 order-lg-1 order-1 mb-2 mb-lg-0 text-center text-lg-start enav">
-               <h3>Reports</h3>
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd" title="EstiMate - Reports">
+    <link rel="stylesheet" type="text/css" href="/css/index.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <t:security.authenticated>
+        <div class="container my-3">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-6 order-lg-2 order-2 mb-2 mb-lg-0 text-center">
+                    <t:form t:id="dateForm" class="date-form w-100">
+                        <div class="input-group">
+                            <span class="input-group-text" title="Planned end date">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input t:id="dateRange" type="text" class="form-control" placeholder="Showing all dates" readonly="readonly" />
+                            <input type="submit" class="btn btn-primary" value="Search" />
+                            <button type="button" class="btn btn-secondary" onclick="resetDateRange()">Show All</button>
+                        </div>
+                    </t:form>
+                </div>
+                <div class="col-12 col-lg-3 order-lg-1 order-2">
+                    <h2>Report Generator</h2>
+                    <t:form t:id="categoryForm">
+                        <div class="input-group mt-2">
+                            <t:textfield t:id="newCategoryField" value="newCategory" placeholder="Enter new category" class="form-control" />
+                            <button type="button" class="btn btn-secondary" onclick="addCategory()">Add Category</button>
+                        </div>
+                        <div class="input-group mt-2">
+                            <t:select t:id="categorySelect" value="category" model="categoryModel" class="form-control" />
+                            <input type="hidden" id="hiddenCategory" value="${hiddenCategory}" />
+                            <input type="submit" class="btn btn-primary" value="Generate Report" />
+                        </div>
+                    </t:form>
+                </div>
+                <div class="col-12 col-lg-9 order-lg-2 order-1">
+                    <h2>Tasks</h2>
+                    <t:loop source="tasks" value="task">
+                        <p>${task.name}</p>
+                    </t:loop>
+                </div>
             </div>
-            <div class="col-12 col-lg-6 order-lg-2 order-2 mb-2 mb-lg-0 text-center">
-               <t:form t:id="dateForm" class="date-form w-100">
-                  <div class="input-group">
-                     <span class="input-group-text" title="Planned end date">
-                     <i class="fa fa-calendar"></i>
-                     </span>            
-                     <input t:id="dateRange" type="text" class="form-control" placeholder="Showing all dates" readonly="readonly"/>
-                     <input type="submit" class="btn btn-primary" value="Generate Report"/>
-                     <button type="button" class="btn btn-secondary" onclick="resetDateRange()">Show All</button>
-                  </div>
-               </t:form>
-            </div>
-            <div class="col-12 col-lg-3 order-lg-3 order-3 mb-2 mb-lg-0 text-center text-lg-end">
-               <!-- third column in nav, leaving empty-->
-            </div>
-         </div>
-      </div>
-      <t:if test="noTasks">
-         <div class="container d-flex justify-content-center align-items-center noTasks">
+        </div>
+
+        <div class="container mt-4">
+            <h3>Existing Reports</h3>
+            <table class="table">
+                <tr>
+                    <th>Category</th>
+                    <th>Days Since Task Start</th>
+                    <th>Estimated Days to Completion</th>
+                    <th>Net Loss/Gain</th>
+                    <th>Actions</th>
+                </tr>
+                <t:loop source="reports" value="report">
+                    <t:if test="report.category.equals(category)">
+                        <tr>
+                            <td>${report.category}</td>
+                            <td>${report.daysSinceTaskStart}</td>
+                            <td>${report.estimatedDaysToCompletion}</td>
+                            <td>${report.netLossGain}</td>
+                            <td>
+                                <t:pagelink class="btn btn-primary" page="reports/ViewReport" context="${report.getPK()}">View Report</t:pagelink>
+                                <t:actionlink context="${report.getPK()}" t:id="deleteLink" class="btn btn-danger">Delete</t:actionlink>
+                            </td>
+                        </tr>
+                    </t:if>
+                </t:loop>
+            </table>
+        </div>
+    </t:security.authenticated>
+
+    <t:security.notauthenticated>
+        <div class="container d-flex justify-content-center align-items-center loginMessage">
             <div class="row">
-               <div class="col text-center">
-                  <h2>No tasks to display.</h2>
-               </div>
+                <div class="col text-center">
+                    <h2>You need to log in to view this.</h2>
+                </div>
             </div>
-         </div>
-      </t:if>
-<t:unless test="noTasks">
-   <div class="container text-center" style="margin-top: 2rem;">
-      <t:unless test="noReports">
-         <t:loop source="reports" value="report">
-            <div class="d-inline-block" style="padding: 1rem;">
-               <div class="card" style="width: 18rem; border-width: 1rem; background-color: #7C74F6;">
-                  <div class="card-body" style="background-color: #ffffff; text-align: center;">
-                     <h5 class="card-title">Report: ${index}</h5>
-                     <h6 class="card-subtitle mb-2 text-muted">Generated: ${formattedDate}</h6>
-                     <t:pagelink class="btn btn-primary" page="reports/ViewReport" context="report">View Report</t:pagelink>
-                  </div>
-               </div>
-            </div>
-         </t:loop>
-      </t:unless>
-   </div>
-</t:unless>
-   <div class="container">
-      <p>Looking for the original <a href="/oldreports">Reports</a>?</p>
-   </div>
-      <script src="/js/dateRange.js"></script>
-   </t:security.authenticated>
-   <t:security.notauthenticated>
-      <div class="container d-flex justify-content-center align-items-center loginMessage">
-         <div class="row">
-            <div class="col text-center">
-               <h2>You need to log in to view this.</h2>
-            </div>
-         </div>
-      </div>
-   </t:security.notauthenticated>
-</html>
+        </div>
+    </t:security.notauthenticated>
+
+    <!-- JavaScript to add new category to the dropdown -->
+    <script type="text/javascript">
+        function addCategory() {
+            var newCategory = document.getElementById("newCategoryField").value;
+            if (newCategory !== "") {
+                var categorySelect = document.getElementById("categorySelect");
+                var option = document.createElement("option");
+                option.value = newCategory;
+                option.text = newCategory;
+                categorySelect.appendChild(option);
+                document.getElementById("newCategoryField").value = "";  // Clear the text field
+            } else {
+                alert("Please enter a valid category name.");
+            }
+        }
+
+    </script>
+    <script src="/js/dateRange.js"></script>
+</t:layout>
